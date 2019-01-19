@@ -7,6 +7,47 @@
 #include <sys/ioctl.h>
 #include <time.h>
 
+void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, int i, int xoffset, int yoffset, int letter[10][10]);
+void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, int i, int xoffset, int yoffset, int letter[10][10]) {
+    long int location = 0;
+    for(int j=9;j>=0;j--) {
+        int y = i - (9-j)*10 + yoffset;
+        int tempY = y;
+        for(int k=0;k<10;k++) {
+            int r,g,b;
+            if(letter[j][k] == 1) {
+                r = 153;
+                g = 255;
+                b = 51;
+            } else {
+                r = 0;
+                g = 0;
+                b = 0;
+            }
+            int x = xoffset + k*10;
+            int tempX = x;
+            y = tempY;
+            // printf("%d %d : %d\n",j,k,color);
+            while((y > i-10-(9-j)*10 + yoffset) && (y>0) && (y<=1079)) {
+                while(x < (xoffset+(k+1)*10)) {
+                    location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                            (y+vinfo.yoffset) * finfo.line_length;
+
+                    if (vinfo.bits_per_pixel == 32) {
+                        *(fbp + location) = b;        // Some blue
+                        *(fbp + location + 1) = g;     // A little green
+                        *(fbp + location + 2) = r;    // A lot of red
+                        *(fbp + location + 3) = 0;      // No transparency
+                    } 
+                    x++;
+                }
+                y--;
+                x = tempX;
+            }
+        }
+    }
+}
+
 int main()
 {
     int fbfd = 0;
@@ -16,17 +57,79 @@ int main()
     char *fbp = 0;
     int x = 0, y = 0;
     long int location = 0;
+              
+    int Q[10][10]={{0,0,0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0,0,0},
+                   {0,0,0,0,0,0,0,0,0,0}};
 
-    int C[10][10]={{0,0,0,1,1,1,1,0,0,0},
-                   {0,0,1,1,1,1,1,1,0,0},
-                   {0,1,1,1,0,0,1,1,1,0},
-                   {1,1,1,0,0,0,0,1,1,1},
-                   {1,1,0,0,0,0,0,0,1,1},
-                   {1,1,0,0,0,0,0,0,1,1},
-                   {1,1,1,1,1,1,1,1,1,1},
-                   {1,1,1,1,1,1,1,1,1,1},
-                   {1,1,0,0,0,0,0,0,1,1},
-                   {1,1,0,0,0,0,0,0,1,1}};
+    int C[10][10]={{0,0,1,1,1,1,1,1,1,0},
+                   {0,1,1,1,1,1,1,1,1,0},
+                   {1,1,1,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,1,0,0,0,0,0,0,0},
+                   {0,1,1,1,1,1,1,1,1,0},
+                   {0,0,1,1,1,1,1,1,1,0}};
+    
+    int E[10][10]={{1,1,1,1,1,1,1,1,1,0},
+                   {1,1,1,1,1,1,1,1,1,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,1,1,1,1,1,1,1,0},
+                   {1,1,1,1,1,1,1,1,1,0}};
+
+    int H[10][10]={{1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,1,1,1,1,1,1,1,0},
+                   {1,1,1,1,1,1,1,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0}};
+    
+    int D[10][10]={{1,1,1,1,1,1,1,0,0,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {1,1,0,0,0,0,1,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,1,1,1,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {1,1,1,1,1,1,1,0,0,0}};
+
+    int P[10][10]={{1,1,1,1,1,1,1,0,0,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,0,0,0,0,0,1,1,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {1,1,1,1,1,1,1,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0}};
+
+
+    // Open the file for reading and writing
+    fbfd = open("/dev/fb0", O_RDWR);
+    if (fbfd == -1) {
+        perror("Error: cannot open framebuffer device"); 
+    }
 
     // Open the file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
@@ -67,44 +170,22 @@ int main()
     // printf("%d\n",C[0][0]);
     int i = 1079;
     while(i > 0) {
-        for(int j=9;j>=0;j--) {
-            x = 100;
-            y = i - (9-j)*10;
-            int tempY = y;
-            for(int k=0;k<10;k++) {
-                int color;
-                if(C[j][k] == 1) {
-                    color = 255;
-                } else {
-                    color = 0;
-                }
-                x = 100 + k*10;
-                int tempX = x;
-                y = tempY;
-                // printf("%d %d : %d\n",j,k,color);
-                while((y > i-10-(9-j)*10) && (y>0)) {
-                    while(x < (100+(k+1)*10)) {
-                        location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
-                                (y+vinfo.yoffset) * finfo.line_length;
-
-                        if (vinfo.bits_per_pixel == 32) {
-                            *(fbp + location) = color;        // Some blue
-                            *(fbp + location + 1) = color;     // A little green
-                            *(fbp + location + 2) = color;    // A lot of red
-                            *(fbp + location + 3) = 0;      // No transparency
-                        } 
-                        x++;
-                    }
-                    y--;
-                    x = tempX;
-                }
-            }
+        writeCharacter(fbp, vinfo, finfo, i, 100, 0, C);
+        writeCharacter(fbp, vinfo, finfo, i, 200, 0, H);
+        writeCharacter(fbp, vinfo, finfo, i, 300, 0, E);
+        writeCharacter(fbp, vinfo, finfo, i, 400, 0, E);
+        writeCharacter(fbp, vinfo, finfo, i, 500, 0, P);
+        writeCharacter(fbp, vinfo, finfo, i, 600, 0, E);
+        writeCharacter(fbp, vinfo, finfo, i, 700, 0, E);
+        writeCharacter(fbp, vinfo, finfo, i, 800, 0, D);
+        usleep(90000);
+        y = i-100;
+        if(y<0) {
+            y = 1;
         }
-        usleep(80000);
-        y = i;
-        while((y>i-100) && (y>0)) {
+        while((y<=i)) {
             x = 100;
-            while(x < 200) {
+            while(x < 1900) {
 
                 location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
                         (y+vinfo.yoffset) * finfo.line_length;
@@ -124,7 +205,7 @@ int main()
                 }
                 x++;
             }
-            y--;
+            y++;
         }
         i-=8;
     }
