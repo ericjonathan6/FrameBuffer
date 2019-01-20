@@ -430,6 +430,9 @@ int main()
                 if (listNama[iterator][it] == 'c') {
                     writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, C);
                 }
+                if (listNama[iterator][it] == 'd') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, D);
+                }
                 if (listNama[iterator][it] == 'e') {
                     writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, E);
                 }
