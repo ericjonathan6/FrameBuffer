@@ -11,8 +11,8 @@
 void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, int i, int xoffset, int yoffset, int letter[10][10], int rgb[3], int size);
 void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, int i, int xoffset, int yoffset, int letter[10][10], int rgb[3], int size) {
     long int location = 0;
-    for(int j=9;j>=0;j--) {
-        int y = i - (9-j)*size + yoffset;
+    for(int j=9; j>=0 ; j--) {
+        int y = i - (9 - j) * size + yoffset;
         int tempY = y;
         for(int k=0;k<10;k++) {
             int r,g,b;
@@ -28,7 +28,6 @@ void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scr
             int x = xoffset + k*size;
             int tempX = x;
             y = tempY;
-            // printf("%d %d : %d\n",j,k,color);
             while((y > i-10-(9-j)*size + yoffset) && (y>0) && (y<=1079)) {
                 while(x < (xoffset+(k+1)*size)) {
                     location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
@@ -39,7 +38,7 @@ void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scr
                         *(fbp + location + 1) = g;     // A little green
                         *(fbp + location + 2) = r;    // A lot of red
                         *(fbp + location + 3) = 0;      // No transparency
-                    } 
+                    }
                     x++;
                 }
                 y--;
@@ -50,8 +49,7 @@ void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scr
 }
 
 
-int main()
-{
+int main() {
     int fbfd = 0;
     struct fb_var_screeninfo vinfo;
     struct fb_fix_screeninfo finfo;
@@ -80,7 +78,7 @@ int main()
                    {1,1,0,0,0,0,1,1,0,0},
                    {1,1,0,0,0,0,1,1,0,0},
                    {1,1,1,1,1,1,1,1,0,0},
-                   {1,1,1,1,1,1,1,0,0,0}};    
+                   {1,1,1,1,1,1,1,0,0,0}};
 
     int C[10][10]={{0,0,1,1,1,1,1,1,1,0},
                    {0,1,1,1,1,1,1,1,1,0},
@@ -192,7 +190,7 @@ int main()
                    {1,1,0,0,0,0,0,0,0,0},
                    {1,1,1,1,1,1,1,1,1,0},
                    {1,1,1,1,1,1,1,1,1,0}};
-          
+
     int M[10][10]={{1,1,0,0,0,0,1,1,0,0},
                    {1,1,0,0,0,0,1,1,0,0},
                    {1,1,1,1,1,1,1,1,0,0},
@@ -203,7 +201,7 @@ int main()
                    {1,1,0,0,0,0,1,1,0,0},
                    {1,1,0,0,0,0,1,1,0,0},
                    {1,1,0,0,0,0,1,1,0,0}};
-          
+
     int N[10][10]={{1,1,1,0,0,0,1,1,0,0},
                    {1,1,1,0,0,0,1,1,0,0},
                    {1,1,1,1,0,0,1,1,0,0},
@@ -214,7 +212,7 @@ int main()
                    {1,1,0,0,1,1,1,1,0,0},
                    {1,1,0,0,0,1,1,1,0,0},
                    {1,1,0,0,0,1,1,1,0,0}};
-          
+
     int O[10][10]={{1,1,1,1,1,1,1,1,0,0},
                    {1,1,1,1,1,1,1,1,0,0},
                    {1,1,0,0,0,0,1,1,0,0},
@@ -238,7 +236,6 @@ int main()
                    {1,1,0,0,0,0,0,0,0,0},
                    {1,1,0,0,0,0,0,0,0,0}};
 
-          
     int Q[10][10]={{0,0,1,1,1,1,0,0,0,0},
                    {0,1,1,1,1,1,1,0,0,0},
                    {1,1,0,0,0,0,1,1,0,0},
@@ -249,7 +246,7 @@ int main()
                    {1,1,0,0,0,1,1,1,0,0},
                    {0,1,1,1,1,1,1,0,0,0},
                    {0,0,1,1,1,1,0,1,0,0}};
-          
+
     int R[10][10]={{1,1,1,1,1,1,1,0,0,0},
                    {1,1,1,1,1,1,1,1,0,0},
                    {1,1,0,0,0,0,1,1,0,0},
@@ -415,7 +412,7 @@ int main()
                         {0,0,0,0,0,0,1,1,0,0},
                         {1,1,1,1,1,1,1,1,0,0},
                         {1,1,1,1,1,1,1,1,0,0}};
-    
+
     int six[10][10]={{1,1,1,1,1,1,1,1,0,0},
                         {1,1,1,1,1,1,1,1,0,0},
                         {1,1,1,0,0,0,0,0,0,0},
@@ -464,7 +461,7 @@ int main()
                         {0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0},
-                        {1,1,1,1,1,1,1,1,0,0}, 
+                        {1,1,1,1,1,1,1,1,0,0},
                         {1,1,1,1,1,1,1,1,0,0},
                         {0,0,0,0,0,0,0,0,0,0},
                         {0,0,0,0,0,0,0,0,0,0},
@@ -514,22 +511,21 @@ int main()
 
     // Figure out where in memory to put the pixel
     // printf("%d\n",C[0][0]);
-     while((y<1080)) {
+     while(y<1080) {
                 x = 0;
                 while(x < 1900) {
-                    location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
-                            (y+vinfo.yoffset) * finfo.line_length;
+                    location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel / 8) +
+                               (y+vinfo.yoffset) * finfo.line_length;
 
                     if (vinfo.bits_per_pixel == 32) {
                         *(fbp + location) = 0;        // Some blue
                         *(fbp + location + 1) = 0;     // A little green
                         *(fbp + location + 2) = 0;    // A lot of red
                         *(fbp + location + 3) = 0;      // No transparency
-                //location += 4;
-                    } else  { //assume 16bpp
+                    } else { //assume 16bpp
                         int b = 10;
-                        int g = (x-100)/6;     // A little green
-                        int r = 31-(y-100)/16;    // A lot of red
+                        int g = (x - 100) / 6;     // A little green
+                        int r = 31 - (y-100) / 16;    // A lot of red
                         unsigned short int t = r<<11 | g << 5 | b;
                         *((unsigned short int*)(fbp + location)) = t;
                     }
@@ -556,7 +552,7 @@ int main()
         while(i+(numberLine*spaceOfLine) > 0) {
             int len = 0;
             int titikAwal = 0 ;
-            int rgb[3] = {255,192,203}; 
+            int rgb[3] = {255,192,203};
             for(int iterator = 0; iterator < 7; iterator++){
                 int size = 5;
                 int inc = size*10;
@@ -685,11 +681,9 @@ int main()
                         titikAwal+= (inc / 4);
                     }
 
-                    titikAwal+=inc;       
+                    titikAwal += inc;
                 }
-            
             }
-            
             usleep(90000);
             y = i-100;
             if(y<0) {
