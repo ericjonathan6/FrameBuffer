@@ -8,29 +8,29 @@
 #include <time.h>
 #include <string.h>
 
-void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, int i, int xoffset, int yoffset, int letter[10][10]);
-void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, int i, int xoffset, int yoffset, int letter[10][10]) {
+void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, int i, int xoffset, int yoffset, int letter[10][10], int rgb[3], int size);
+void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, int i, int xoffset, int yoffset, int letter[10][10], int rgb[3], int size) {
     long int location = 0;
     for(int j=9;j>=0;j--) {
-        int y = i - (9-j)*10 + yoffset;
+        int y = i - (9-j)*size + yoffset;
         int tempY = y;
-        for(int k=0;k<10;k++) {
+        for(int k=0;k<size;k++) {
             int r,g,b;
             if(letter[j][k] == 1) {
-                r = 127;
-                g = 0;
-                b = 255;
+                r = rgb[0];
+                g = rgb[1];
+                b = rgb[2];
             } else {
                 r = 0;
                 g = 0;
                 b = 0;
             }
-            int x = xoffset + k*10;
+            int x = xoffset + k*size;
             int tempX = x;
             y = tempY;
             // printf("%d %d : %d\n",j,k,color);
-            while((y > i-10-(9-j)*10 + yoffset) && (y>0) && (y<=1079)) {
-                while(x < (xoffset+(k+1)*10)) {
+            while((y > i-size-(9-j)*size + yoffset) && (y>0) && (y<=1079)) {
+                while(x < (xoffset+(k+1)*size)) {
                     location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
                             (y+vinfo.yoffset) * finfo.line_length;
 
@@ -406,10 +406,16 @@ int main()
                          "cis"
                         };
 
+    srand(time(NULL));
     while(i+(numberLine*spaceOfLine) > 0) {
         int len = 0;
         int titikAwal = 0 ;
+        int rgb[3] = {255,192,203}; // Pink
+        int size = 10;
         for(int iterator = 0; iterator < 7; iterator++){
+            rgb[0] = rand()%200 + 50;
+            rgb[1] = rand()%200 + 50;
+            rgb[2] = rand()%200 + 50;
             len = strlen(listNama[iterator]);
             // printf("%d %s",len, listNama[iterator]);
             titikAwal = 100;
@@ -418,82 +424,82 @@ int main()
             }
             for (int it = 0;it < len ; it++) {
                 if (listNama[iterator][it] == 'a') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, A);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, A, rgb, size);
                 }
                 if (listNama[iterator][it] == 'b') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, B);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, B, rgb, size);
                 }
                 if (listNama[iterator][it] == 'c') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, C);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, C, rgb, size);
                 }
                 if (listNama[iterator][it] == 'd') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, D);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, D, rgb, size);
                 }
                 if (listNama[iterator][it] == 'e') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, E);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, E, rgb, size);
                 }
                 if (listNama[iterator][it] == 'f') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, F);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, F, rgb, size);
                 }
                 if (listNama[iterator][it] == 'g') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, G);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, G, rgb, size);
                 }
                 if (listNama[iterator][it] == 'h') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, H);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, H, rgb, size);
                 }
                 if (listNama[iterator][it] == 'i') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, I);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, I, rgb, size);
                 }
                 if (listNama[iterator][it] == 'j') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, J);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, J, rgb, size);
                 }
                 if (listNama[iterator][it] == 'k') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, K);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, K, rgb, size);
                 }
                 if (listNama[iterator][it] == 'l') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, L);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, L, rgb, size);
                 }
                 if (listNama[iterator][it] == 'm') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, M);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, M, rgb, size);
                 }
                 if (listNama[iterator][it] == 'n') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, N);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, N, rgb, size);
                 }
                 if (listNama[iterator][it] == 'o') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, O);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, O, rgb, size);
                 }
                 if (listNama[iterator][it] == 'p') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, P);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, P, rgb, size);
                 }
                 if (listNama[iterator][it] == 'q') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, Q);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, Q, rgb, size);
                 }
                 if (listNama[iterator][it] == 'r') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, R);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, R, rgb, size);
                 }
                 if (listNama[iterator][it] == 's') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, S);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, S, rgb, size);
                 }
                 if (listNama[iterator][it] == 't') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, T);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, T, rgb, size);
                 }
                 if (listNama[iterator][it] == 'u') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, U);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, U, rgb, size);
                 }
                 if (listNama[iterator][it] == 'v') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, V);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, V, rgb, size);
                 }
                 if (listNama[iterator][it] == 'w') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, W);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, W, rgb, size);
                 }
                 if (listNama[iterator][it] == 'x') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, X);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, X, rgb, size);
                 }
                 if (listNama[iterator][it] == 'y') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, Y);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, Y, rgb, size);
                 }
                 if (listNama[iterator][it] == 'z') {
-                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, Z);
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, Z, rgb, size);
                 }
                 if (listNama[iterator][it] == ' ') {
                     titikAwal+=100;
