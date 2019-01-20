@@ -460,6 +460,17 @@ int main()
                         {1,1,1,1,1,1,1,1,0,0},
                         {1,1,1,1,1,1,1,1,0,0}};
 
+    int dash[10][10]=  {{0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0},
+                        {1,1,1,1,1,1,1,1,0,0}, 
+                        {1,1,1,1,1,1,1,1,0,0},
+                        {0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0},
+                        {0,0,0,0,0,0,0,0,0,0}};
+
     // Open the file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
     if (fbfd == -1) {
@@ -610,6 +621,39 @@ int main()
                 if (listNama[iterator][it] == 'z') {
                     writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, Z, rgb, size);
                 }
+                if (listNama[iterator][it] == '1') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, one, rgb, size);
+                }
+                if (listNama[iterator][it] == '2') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, two, rgb, size);
+                }
+                if (listNama[iterator][it] == '3') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, three, rgb, size);
+                }
+                if (listNama[iterator][it] == '4') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, four, rgb, size);
+                }
+                if (listNama[iterator][it] == '5') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, five, rgb, size);
+                }
+                if (listNama[iterator][it] == '6') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, six, rgb, size);
+                }
+                if (listNama[iterator][it] == '7') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, seven, rgb, size);
+                }
+                if (listNama[iterator][it] == '8') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, eight, rgb, size);
+                }
+                if (listNama[iterator][it] == '9') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, nine, rgb, size);
+                }
+                if (listNama[iterator][it] == '0') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, zero, rgb, size);
+                }
+                if (listNama[iterator][it] == '-') {
+                    writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, dash, rgb, size);
+                }
                 if (listNama[iterator][it] == ' ') {
                     titikAwal+=100;
                 }
@@ -618,20 +662,7 @@ int main()
             }
         
         }
-        // writeCharacter(fbp, vinfo, finfo, i, 100, 0, C);
-        // writeCharacter(fbp, vinfo, finfo, i, 200, 0, H);
-        // writeCharacter(fbp, vinfo, finfo, i, 300, 0, E);
-        // writeCharacter(fbp, vinfo, finfo, i, 400, 0, E);
-        // writeCharacter(fbp, vinfo, finfo, i, 500, 0, P);
-        // writeCharacter(fbp, vinfo, finfo, i, 600, 0, E);
-        // writeCharacter(fbp, vinfo, finfo, i, 700, 0, E);
-        // writeCharacter(fbp, vinfo, finfo, i, 800, 0, D);
-        // writeCharacter(fbp, vinfo, finfo, i + spaceOfLine , 100,0,F);
-        // writeCharacter(fbp, vinfo, finfo, i + spaceOfLine , 200,0,G);
-        // writeCharacter(fbp, vinfo, finfo, i + spaceOfLine , 300,0,I);
-        // writeCharacter(fbp, vinfo, finfo, i + spaceOfLine , 400,0,J);
-
-
+        
         usleep(90000);
         y = i-100;
         if(y<0) {
