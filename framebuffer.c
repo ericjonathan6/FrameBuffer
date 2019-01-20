@@ -509,11 +509,9 @@ int main() {
 
     x = 0; y = 0;       // Where we are going to put the pixel
 
-    // Figure out where in memory to put the pixel
-    // printf("%d\n",C[0][0]);
-     while(y<1080) {
+     while( y<1080 ) {
                 x = 0;
-                while(x < 1900) {
+                while( x<1900 ) {
                     location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel / 8) +
                                (y+vinfo.yoffset) * finfo.line_length;
 
@@ -539,19 +537,19 @@ int main() {
         int i = 1079;
         int numberLine = 7;
         int spaceOfLine = 150;
-        char  *listNama[] = {"cheepeed",
+        char  *words[] = {"cheepeed",
                             "jason - 13516024 - anglo school",
                             "ensof - 13516096 - sma kharisma",
                             "steven - 13516102 - sma don bosco",
                             "ricky - 13516105 - sma bhinneka",
                             "eric - 13516117 - sma xaverius",
-                            "chris - 13516147 - sma n 1 solo"
+                            "christian - 13516147 - sma n 1 solo"
                             };
 
         srand(time(NULL));
         while(i+(numberLine*spaceOfLine) > 0) {
             int len = 0;
-            int titikAwal = 0 ;
+            int startPx = 0 ;
             int rgb[3] = {255,192,203};
             for(int iterator = 0; iterator < 7; iterator++){
                 int size = 5;
@@ -559,129 +557,129 @@ int main() {
                 rgb[0] = rand()%200 + 50;
                 rgb[1] = rand()%200 + 50;
                 rgb[2] = rand()%200 + 50;
-                len = strlen(listNama[iterator]);
-                titikAwal = 50;
+                len = strlen(words[iterator]);
+                startPx = 50;
                 if (iterator == 0) {
                     size = 10;
                     inc = size*10;
                 }
                 for (int it = 0;it < len ; it++) {
-                    if (listNama[iterator][it] == 'a') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, A, rgb, size);
+                    if (words[iterator][it] == 'a') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, A, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'b') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, B, rgb, size);
+                    if (words[iterator][it] == 'b') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, B, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'c') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, C, rgb, size);
+                    if (words[iterator][it] == 'c') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, C, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'd') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, D, rgb, size);
+                    if (words[iterator][it] == 'd') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, D, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'e') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, E, rgb, size);
+                    if (words[iterator][it] == 'e') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, E, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'f') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, F, rgb, size);
+                    if (words[iterator][it] == 'f') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, F, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'g') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, G, rgb, size);
+                    if (words[iterator][it] == 'g') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, G, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'h') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, H, rgb, size);
+                    if (words[iterator][it] == 'h') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, H, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'i') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, I, rgb, size);
+                    if (words[iterator][it] == 'i') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, I, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'j') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, J, rgb, size);
+                    if (words[iterator][it] == 'j') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, J, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'k') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, K, rgb, size);
+                    if (words[iterator][it] == 'k') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, K, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'l') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, L, rgb, size);
+                    if (words[iterator][it] == 'l') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, L, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'm') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, M, rgb, size);
+                    if (words[iterator][it] == 'm') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, M, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'n') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, N, rgb, size);
+                    if (words[iterator][it] == 'n') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, N, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'o') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, O, rgb, size);
+                    if (words[iterator][it] == 'o') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, O, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'p') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, P, rgb, size);
+                    if (words[iterator][it] == 'p') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, P, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'q') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, Q, rgb, size);
+                    if (words[iterator][it] == 'q') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, Q, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'r') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, R, rgb, size);
+                    if (words[iterator][it] == 'r') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, R, rgb, size);
                     }
-                    if (listNama[iterator][it] == 's') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, S, rgb, size);
+                    if (words[iterator][it] == 's') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, S, rgb, size);
                     }
-                    if (listNama[iterator][it] == 't') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, T, rgb, size);
+                    if (words[iterator][it] == 't') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, T, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'u') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, U, rgb, size);
+                    if (words[iterator][it] == 'u') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, U, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'v') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, V, rgb, size);
+                    if (words[iterator][it] == 'v') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, V, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'w') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, W, rgb, size);
+                    if (words[iterator][it] == 'w') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, W, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'x') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, X, rgb, size);
+                    if (words[iterator][it] == 'x') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, X, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'y') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, Y, rgb, size);
+                    if (words[iterator][it] == 'y') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, Y, rgb, size);
                     }
-                    if (listNama[iterator][it] == 'z') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, Z, rgb, size);
+                    if (words[iterator][it] == 'z') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, Z, rgb, size);
                     }
-                    if (listNama[iterator][it] == '1') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, one, rgb, size);
+                    if (words[iterator][it] == '1') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, one, rgb, size);
                     }
-                    if (listNama[iterator][it] == '2') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, two, rgb, size);
+                    if (words[iterator][it] == '2') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, two, rgb, size);
                     }
-                    if (listNama[iterator][it] == '3') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, three, rgb, size);
+                    if (words[iterator][it] == '3') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, three, rgb, size);
                     }
-                    if (listNama[iterator][it] == '4') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, four, rgb, size);
+                    if (words[iterator][it] == '4') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, four, rgb, size);
                     }
-                    if (listNama[iterator][it] == '5') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, five, rgb, size);
+                    if (words[iterator][it] == '5') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, five, rgb, size);
                     }
-                    if (listNama[iterator][it] == '6') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, six, rgb, size);
+                    if (words[iterator][it] == '6') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, six, rgb, size);
                     }
-                    if (listNama[iterator][it] == '7') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, seven, rgb, size);
+                    if (words[iterator][it] == '7') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, seven, rgb, size);
                     }
-                    if (listNama[iterator][it] == '8') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, eight, rgb, size);
+                    if (words[iterator][it] == '8') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, eight, rgb, size);
                     }
-                    if (listNama[iterator][it] == '9') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, nine, rgb, size);
+                    if (words[iterator][it] == '9') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, nine, rgb, size);
                     }
-                    if (listNama[iterator][it] == '0') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, zero, rgb, size);
+                    if (words[iterator][it] == '0') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, zero, rgb, size);
                     }
-                    if (listNama[iterator][it] == '-') {
-                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), titikAwal, 0, dash, rgb, size);
+                    if (words[iterator][it] == '-') {
+                        writeCharacter(fbp, vinfo, finfo, i+(iterator*spaceOfLine), startPx, 0, dash, rgb, size);
                     }
-                    if (listNama[iterator][it] == ' ') {
-                        titikAwal+= (inc / 4);
+                    if (words[iterator][it] == ' ') {
+                        startPx+= (inc / 4);
                     }
 
-                    titikAwal += inc;
+                    startPx += inc;
                 }
             }
             usleep(90000);
