@@ -16,9 +16,9 @@ void writeCharacter(char *fbp, struct fb_var_screeninfo vinfo, struct fb_fix_scr
         for(int k=0;k<10;k++) {
             int r,g,b;
             if(letter[j][k] == 1) {
-                r = 153;
-                g = 255;
-                b = 51;
+                r = 127;
+                g = 0;
+                b = 255;
             } else {
                 r = 0;
                 g = 0;
@@ -124,6 +124,51 @@ int main()
                    {1,1,0,0,0,0,0,0,0,0},
                    {1,1,0,0,0,0,0,0,0,0}};
 
+    int F[10][10]={{1,1,1,1,1,1,1,1,0,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,1,1,1,1,0,0,0,0},
+                   {1,1,1,1,1,1,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0}};    
+
+
+    int G[10][10]={{1,1,1,1,1,1,1,1,0,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,0,0,0,0,0,0},
+                   {1,1,0,0,1,1,1,1,0,0},
+                   {1,1,0,0,1,1,1,1,0,0},
+                   {1,1,0,0,0,0,1,1,0,0},
+                   {1,1,0,0,0,0,1,1,0,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {1,1,1,1,1,1,1,1,0,0}};
+
+
+    int I[10][10]={{1,1,1,1,1,1,1,1,0,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {0,0,0,1,1,0,0,0,0,0},
+                   {0,0,0,1,1,0,0,0,0,0},
+                   {0,0,0,1,1,0,0,0,0,0},
+                   {0,0,0,1,1,0,0,0,0,0},
+                   {0,0,0,1,1,0,0,0,0,0},
+                   {0,0,0,1,1,0,0,0,0,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {1,1,1,1,1,1,1,1,0,0}};
+
+    int J[10][10]={{1,1,1,1,1,1,1,1,0,0},
+                   {1,1,1,1,1,1,1,1,0,0},
+                   {0,0,0,0,0,1,1,0,0,0},
+                   {0,0,0,0,0,1,1,0,0,0},
+                   {0,0,0,0,0,1,1,0,0,0},
+                   {0,0,0,0,0,1,1,0,0,0},
+                   {1,1,0,0,0,1,1,0,0,0},
+                   {1,1,0,0,0,1,1,0,0,0},
+                   {1,1,1,1,1,1,1,0,0,0},
+                   {1,1,1,1,1,1,1,0,0,0}};
 
     // Open the file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
@@ -169,7 +214,10 @@ int main()
     // Figure out where in memory to put the pixel
     // printf("%d\n",C[0][0]);
     int i = 1079;
-    while(i > 0) {
+    int spaceOneLine = 100;
+    int numberLine = 6;
+    int spaceOfLine = 50;
+    while(i+150 > 0) {
         writeCharacter(fbp, vinfo, finfo, i, 100, 0, C);
         writeCharacter(fbp, vinfo, finfo, i, 200, 0, H);
         writeCharacter(fbp, vinfo, finfo, i, 300, 0, E);
@@ -178,12 +226,18 @@ int main()
         writeCharacter(fbp, vinfo, finfo, i, 600, 0, E);
         writeCharacter(fbp, vinfo, finfo, i, 700, 0, E);
         writeCharacter(fbp, vinfo, finfo, i, 800, 0, D);
+        writeCharacter(fbp, vinfo, finfo, i + spaceOfLine + spaceOneLine, 100,0,F);
+        writeCharacter(fbp, vinfo, finfo, i + spaceOfLine + spaceOneLine, 200,0,G);
+        writeCharacter(fbp, vinfo, finfo, i + spaceOfLine + spaceOneLine, 300,0,I);
+        writeCharacter(fbp, vinfo, finfo, i + spaceOfLine + spaceOneLine, 400,0,J);
+
+
         usleep(90000);
         y = i-100;
         if(y<0) {
             y = 1;
         }
-        while((y<=i)) {
+        while((y<1080)) {
             x = 100;
             while(x < 1900) {
 
