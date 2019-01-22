@@ -18,6 +18,36 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 // #include <conio.h>
 // #include <graphics.h>
 
+struct Point { 
+   int x, y; 
+};  
+  
+// function for line generation 
+struct Point* bresenham(struct Point A, struct Point B){ 
+   int m_new = 2 * (B.y - A.y);  //multiple by 2 to avoid comparison with 0.5
+   // prove : https://csustan.csustan.edu/~tom/Lecture-Notes/Graphics/Bresenham-Line/Bresenham-Line.pdf
+   int slope_error_new = m_new - (B.x - A.x);
+   struct Point result_points[5000], new_point;
+   int iterator = 0;
+   for (int x = A.x, y = A.y; x <= B.x; x++){ 
+      
+      new_point.x = x;
+      new_point.y = y;
+
+      result_points[iterator] = new_point;
+      slope_error_new += m_new;  
+      if (slope_error_new >= 0){ 
+         y++; 
+         slope_error_new  -= 2 * (B.x - A.x); 
+      } 
+      iterator++;
+   } 
+   // for(int i=0;i<iterator;i++){
+   //    printf("%d, %d\n", result_points[i].x,result_points[i].y);
+   // }
+   return result_points;
+}
+
 int main()
 {
     int fbfd = 0;
