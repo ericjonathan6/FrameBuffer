@@ -509,16 +509,16 @@ int main() {
 
     x = 0; y = 0;       // Where we are going to put the pixel
 
-     while( y<1080 ) {
+     while( y<700 ) {
                 x = 0;
-                while( x<1900 ) {
+                while( x<1000 ) {
                     location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel / 8) +
                                (y+vinfo.yoffset) * finfo.line_length;
 
                     if (vinfo.bits_per_pixel == 32) {
-                        *(fbp + location) = 0;        // Some blue
-                        *(fbp + location + 1) = 0;     // A little green
-                        *(fbp + location + 2) = 0;    // A lot of red
+                        *(fbp + location) = 200;        // Some blue
+                        *(fbp + location + 1) = 200;     // A little green
+                        *(fbp + location + 2) = 200;    // A lot of red
                         *(fbp + location + 3) = 0;      // No transparency
                     } else { //assume 16bpp
                         int b = 10;
