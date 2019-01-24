@@ -15,60 +15,188 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
-// #include <conio.h>
-// #include <graphics.h>
-
 struct Point { 
    int x, y; 
 };  
-  
-struct Point* bresenham(struct Point A, struct Point B){ 
-   int dx = B.x - A.x;
-   int dy = B.y - A.y;
-   int x0 = A.x, y0 = A.y;
-   int x1 = B.x, y1 = B.y;
-   int stepx,stepy;
-   struct Point result_points[5000];
-   result_points[0].x = x0;
-   result_points[0].y = y0;
-   int iterator = 1;
-   if (dy < 0) { dy = -dy;  stepy = -1; } else { stepy = 1; }
-   if (dx < 0) { dx = -dx;  stepx = -1; } else { stepx = 1; }
-   dy <<= 1;                        
-   dx <<= 1;                        
 
-   if (dx > dy) {
-      int fraction = dy - (dx >> 1);
-      while (x0 != x1) {
-         x0 += stepx;
-         if (fraction >= 0) {
+void clearShot(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
+    int y = 251;
+    long int location = 0;
+    while((y<870)) {
+        int x = 0;
+        while(x < 1900) {
+            location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                    (y+vinfo.yoffset) * finfo.line_length;
+
+            if (vinfo.bits_per_pixel == 32) {
+                *(fbp + location) = 0;        // Some blue
+                *(fbp + location + 1) = 0;     // A little green
+                *(fbp + location + 2) = 0;    // A lot of red
+                *(fbp + location + 3) = 0;      // No transparency
+            } 
+            x++;
+        }
+        y++;
+    }
+}
+  
+void drawLines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) { 
+    int dx = B.x - A.x;
+    int dy = B.y - A.y;
+    int x0 = A.x, y0 = A.y;
+    int x1 = B.x, y1 = B.y;
+    int stepx,stepy;
+    int iterator = 0;
+    long int location = 0;
+    if (dy < 0) { dy = -dy;  stepy = -1; } else { stepy = 1; }
+    if (dx < 0) { dx = -dx;  stepx = -1; } else { stepx = 1; }
+    dy <<= 1;                        
+    dx <<= 1;                        
+    
+    if (dx > dy) {
+        int fraction = dy - (dx >> 1);
+        while (x0 != x1) {
+            x0 += stepx;
+            if (fraction >= 0) {
             y0 += stepy;
             fraction -= dx;
-         }
-         fraction += dy;
-         result_points[iterator].x = x0;
-         result_points[iterator].y = y0;
-         iterator++;
-      }
-   } else {
-      int fraction = dx - (dy >> 1);
-      while (y0 != y1) {
-         y0 += stepy;
-         
-         if (fraction >= 0) {
+            }
+            fraction += dy;
+            location = (x0+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                        (y0+vinfo.yoffset) * finfo.line_length;
+
+            if (vinfo.bits_per_pixel == 32) {
+                *(fbp + location) = 255;        // Some blue
+                *(fbp + location + 1) = 255;     // A little green
+                *(fbp + location + 2) = 255;    // A lot of red
+                *(fbp + location + 3) = 0;      // No transparency
+            }
+        }
+    } else {
+        int fraction = dx - (dy >> 1);
+        while (y0 != y1) {
+            y0 += stepy;
+            
+            if (fraction >= 0) {
             x0 += stepx;
             fraction -= dy;
-         }
-         
-         fraction += dx;
-         result_points[iterator].x = x0;
-         result_points[iterator].y = y0;
-         iterator++;
-      }
-   }
-   for(int i=0;i<iterator;i++){
-      printf("%d, %d\n", result_points[i].x,result_points[i].y);
-   }
+            }
+            
+            fraction += dx;
+            location = (x0+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                        (y0+vinfo.yoffset) * finfo.line_length;
+
+            if (vinfo.bits_per_pixel == 32) {
+                *(fbp + location) = 255;        // Some blue
+                *(fbp + location + 1) = 255;     // A little green
+                *(fbp + location + 2) = 255;    // A lot of red
+                *(fbp + location + 3) = 0;      // No transparency
+            }
+        }
+    }
+}
+
+void drawShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp,  int direction) {
+    struct Point A, B, C, D, E, F, G;
+    A.x = xoffset;
+    A.y = 200;
+
+    B.x = xoffset + 40;
+    B.y = 200;
+
+    if (direction == 0) {
+        C.x = xoffset + 80;
+    } else {
+        C.x = xoffset + 40;
+    }
+    C.y = 150;
+
+    D.x = xoffset + 80;
+    D.y = 200;
+
+    E.x = xoffset + 120;
+    E.y = 200;
+
+    F.x = xoffset + 100;
+    F.y = 250;
+
+    G.x = xoffset + 20;
+    G.y = 250;
+
+    struct Point awal, akhir;
+    awal.x = 960;
+    awal.y = 870;
+
+    akhir.x = 960;
+    akhir.y = 251;
+
+    drawLines(A, B, vinfo, finfo, fbp);
+    drawLines(B, C, vinfo, finfo, fbp);
+    drawLines(C, D, vinfo, finfo, fbp);
+    drawLines(D, E, vinfo, finfo, fbp);
+    drawLines(E, F, vinfo, finfo, fbp);
+    drawLines(F, G, vinfo, finfo, fbp);
+    drawLines(G, A, vinfo, finfo, fbp);
+
+}
+
+void clearShip(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
+    int y = 150;
+    long int location = 0;
+    while((y<251)) {
+        int x = 0;
+        while(x < 1900) {
+            location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                    (y+vinfo.yoffset) * finfo.line_length;
+
+            if (vinfo.bits_per_pixel == 32) {
+                *(fbp + location) = 0;        // Some blue
+                *(fbp + location + 1) = 0;     // A little green
+                *(fbp + location + 2) = 0;    // A lot of red
+                *(fbp + location + 3) = 0;      // No transparency
+            } 
+            x++;
+        }
+        y++;
+    }
+}
+
+void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
+    struct Point A, B, C, D, E, F, G, H;
+    A.x = 900;
+    A.y = 1000;
+
+    B.x = 1020;
+    B.y = 1000;
+
+    C.x = 920;
+    C.y = 900;
+
+    D.x = 1000;
+    D.y = 900;
+
+    E.x = 950;
+    E.y = 900;
+
+    F.x = 970;
+    F.y = 900;
+
+    G.x = 950;
+    G.y = 870;
+
+    H.x = 970;
+    H.y = 870;
+
+
+    drawLines(A, B, vinfo, finfo, fbp);
+    drawLines(B, D, vinfo, finfo, fbp);
+    drawLines(A, C, vinfo, finfo, fbp);
+    drawLines(C, D, vinfo, finfo, fbp);
+    drawLines(E, G, vinfo, finfo, fbp);
+    drawLines(G, H, vinfo, finfo, fbp);
+    drawLines(F, H, vinfo, finfo, fbp);
+
+
 }
 
 int main()
@@ -79,7 +207,6 @@ int main()
     long int screensize = 0;
     char *fbp = 0;
     int x = 0, y = 0;
-    long int location = 0;
 
     // Open the file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
@@ -114,29 +241,107 @@ int main()
     }
     printf("The framebuffer device was mapped to memory successfully.\n");
 
-    x = 100; y = 100;       // Where we are going to put the pixel
+    int direction = 1;
+    struct Point A, B;
+    A.x = 960;
+    A.y = 870;
 
-    // Figure out where in memory to put the pixel
-    for (y = 100; y < 300; y++)
-        for (x = 100; x < 300; x++) {
+    B.x = 960;
+    B.y = 251;
+    int xoffset = 20;
 
-            location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
-                       (y+vinfo.yoffset) * finfo.line_length;
+    drawCannon(vinfo, finfo, fbp);
+    while(1) {        
+        int dx = B.x - A.x;
+        int dy = B.y - A.y;
+        int x0 = A.x, y0 = A.y;
+        int x1 = B.x, y1 = B.y;
+        int stepx,stepy;
+        int iterator = 0;
+        long int location = 0;
+        if (dy < 0) { dy = -dy;  stepy = -1; } else { stepy = 1; }
+        if (dx < 0) { dx = -dx;  stepx = -1; } else { stepx = 1; }
+        dy <<= 1;                        
+        dx <<= 1;                        
+        
+        if (dx > dy) {
+            int fraction = dy - (dx >> 1);
+            while (x0 != x1) {
+                x0 += stepx;
+                if (fraction >= 0) {
+                y0 += stepy;
+                fraction -= dx;
+                }
+                fraction += dy;
+                location = (x0+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                            (y0+vinfo.yoffset) * finfo.line_length;
 
-            if (vinfo.bits_per_pixel == 32) {
-                *(fbp + location) = 100;        // Some blue
-                *(fbp + location + 1) = 15+(x-100)/2;     // A little green
-                *(fbp + location + 2) = 200-(y-100)/5;    // A lot of red
-                *(fbp + location + 3) = 0;      // No transparency
-            } else  { //assume 16bpp
-                int b = 10;
-                int g = (x-100)/6;     // A little green
-                int r = 31-(y-100)/16;    // A lot of red
-                unsigned short int t = r<<11 | g << 5 | b;
-                *((unsigned short int*)(fbp + location)) = t;
+                if (vinfo.bits_per_pixel == 32) {
+                    *(fbp + location) = 255;        // Some blue
+                    *(fbp + location + 1) = 255;     // A little green
+                    *(fbp + location + 2) = 255;    // A lot of red
+                    *(fbp + location + 3) = 0;      // No transparency
+                }
+                iterator++;
+                drawShip(xoffset, vinfo, finfo, fbp, direction);
+                if (iterator == 25) {
+                    usleep(50000);
+                    clearShip(vinfo, finfo, fbp);
+                    clearShot(vinfo, finfo, fbp);
+                    iterator = 0;
+                    if(direction) {
+                        xoffset += 5;
+                    } else {
+                        xoffset -=5;
+                    }
+                }
             }
+        } else {
+            int fraction = dx - (dy >> 1);
+            while (y0 != y1) {
+                y0 += stepy;
+                
+                if (fraction >= 0) {
+                x0 += stepx;
+                fraction -= dy;
+                }
+                
+                fraction += dx;
+                location = (x0+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                            (y0+vinfo.yoffset) * finfo.line_length;
 
+                if (vinfo.bits_per_pixel == 32) {
+                    *(fbp + location) = 255;        // Some blue
+                    *(fbp + location + 1) = 255;     // A little green
+                    *(fbp + location + 2) = 255;    // A lot of red
+                    *(fbp + location + 3) = 0;      // No transparency
+                }
+                iterator++;
+                drawShip(xoffset, vinfo, finfo, fbp, direction);
+                if (iterator == 25) {
+                    usleep(50000);
+                    clearShip(vinfo, finfo, fbp);
+                    clearShot(vinfo, finfo, fbp);
+                    iterator = 0;
+                    if(direction) {
+                        xoffset += 5;
+                    } else {
+                        xoffset -=5;
+                    }
+
+                    if(xoffset < 20) {
+                        direction = 1;
+                    }
+
+                    if(xoffset > 1770) {
+                        direction = 0;
+                    }
+                }
+            }
         }
+        
+    }
+
     munmap(fbp, screensize);
     close(fbfd);
     return 0;
