@@ -7,6 +7,8 @@ Testing the Linux Framebuffer for Qtopia Core (qt4-x11-4.2.2)
 http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.html
 */
 
+#include <ncurses.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -15,9 +17,21 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+
 struct Point { 
    int x, y; 
 };  
+
+int kbhit(void)
+{
+    int ch = getch();
+    if (ch != ERR) {
+        ungetch(ch);
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 void clearShot(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
     int y = 251;
@@ -313,7 +327,7 @@ void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, 
 
 
 
-int main()
+int main(void)
 {
     int fbfd = 0;
     struct fb_var_screeninfo vinfo;
@@ -382,16 +396,33 @@ int main()
 
     int destroyed = 0;
     int xoffset = 30;
-    drawCannon(vinfo, finfo, fbp);
-    while(1) {            
+    int shot = 0;
+
+    initscr();
+    cbreak();
+    noecho();
+    nodelay(stdscr, TRUE);
+    scrollok(stdscr, TRUE);
+    while(1) {
+        drawCannon(vinfo, finfo, fbp);
         if(offset.y <= 251 && (xoffset+20<=960 && xoffset+100>=960)) {
             drawBullet(offset, vinfo, finfo, fbp);
             clearShot(vinfo, finfo, fbp);
             // break;
         } else {
             drawShip(xoffset, vinfo, finfo, fbp, direction);
-        }       
-        drawBullet(offset, vinfo, finfo, fbp);
+        }
+         if (kbhit()) {
+            int n = getch();
+            refresh();
+            if (n == 97) {
+                shot = 1;
+            }
+        }
+        if(shot == 1) {
+            drawBullet(offset, vinfo, finfo, fbp);
+             offset.y -= 10;
+        }
         usleep(50000);
         clearShip(vinfo, finfo, fbp);
         clearShot(vinfo, finfo, fbp);
@@ -409,10 +440,9 @@ int main()
             direction = 0;
         }
 
-        offset.y -= 10;
-
         if(offset.y < 1) {
             offset.y = 890;
+            shot = 0;
         }
                 
         
