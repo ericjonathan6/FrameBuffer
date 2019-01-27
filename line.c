@@ -199,6 +199,8 @@ void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, 
 
 }
 
+
+
 int main()
 {
     int fbfd = 0;
@@ -207,6 +209,7 @@ int main()
     long int screensize = 0;
     char *fbp = 0;
     int x = 0, y = 0;
+    long int location = 0;
 
     // Open the file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
@@ -249,6 +252,26 @@ int main()
     B.x = 960;
     B.y = 251;
     int xoffset = 20;
+
+    x = 0; y = 0;       // Where we are going to put the pixel
+
+    while( y < 1079 ) {
+        x = 0;
+        while( x < 1919 ) {
+            location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel / 8) +
+                    (y+vinfo.yoffset) * finfo.line_length;
+
+            if (vinfo.bits_per_pixel == 32) {
+                *(fbp + location) = 0;        // Some blue
+                *(fbp + location + 1) = 0;     // A little green
+                *(fbp + location + 2) = 0;    // A lot of red
+                *(fbp + location + 3) = 0;      // No transparency
+            }
+            x++;
+        }
+        y++;
+    }
+
 
     drawCannon(vinfo, finfo, fbp);
     while(1) {        
