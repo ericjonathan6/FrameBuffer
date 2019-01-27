@@ -113,6 +113,152 @@ void drawLines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, s
     }
 }
 
+void destroyShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp,  int direction) {
+    struct Point A, B, C, D, E, F, G, H, X, Z;
+    struct Point f1,f2,f3,f4,f5,f6,f7;
+
+    if (direction == 1) {
+        A.x = xoffset;
+        B.x = xoffset + 30*width/1920;
+        C.x = xoffset + 30*width/1920;
+        D.x = xoffset + 60*width/1920;
+        E.x = xoffset + 70*width/1920;    
+        F.x = xoffset + 110*width/1920;
+        G.x = xoffset + 90*width/1920;
+        H.x = xoffset + 10*width/1920;
+        X.x = xoffset + 30*width/1920;
+        Z.x = xoffset + 70*width/1920;
+
+        f1.x = xoffset + 15*width/1920;
+        f2.x = xoffset + 15*width/1920;
+        f3.x = xoffset + 15*width/1920;
+        f4.x = xoffset + 15*width/1920;
+        f5.x = xoffset - 15*width/1920;
+        f6.x = xoffset - 15*width/1920;
+        f7.x = xoffset - 15*width/1920;
+
+    } else {
+        A.x = xoffset;        
+        B.x = xoffset + 40*width/1920;
+        C.x = xoffset + 50*width/1920;
+        D.x = xoffset + 80*width/1920;
+        E.x = xoffset + 80*width/1920;
+        F.x = xoffset + 110*width/1920;
+        G.x = xoffset + 100*width/1920;
+        H.x = xoffset + 20*width/1920;
+        X.x = xoffset + 40*width/1920;
+        Z.x = xoffset + 80*width/1920;
+    
+        f1.x = xoffset + 95*width/1920;
+        f2.x = xoffset + 95*width/1920;
+        f3.x = xoffset + 95*width/1920;
+        f4.x = xoffset + 95*width/1920;
+        f5.x = xoffset + 125*width/1920;
+        f6.x = xoffset + 125*width/1920;
+        f7.x = xoffset + 125*width/1920;
+    }
+    A.y = 200*height/1080;
+    B.y = 200*height/1080;
+    C.y = 165*height/1080;
+    D.y = 165*height/1080;
+    E.y = 200*height/1080;
+    F.y = 200*height/1080;
+    G.y = 250*height/1080;
+    H.y = 250*height/1080;
+    X.y = 220*height/1080;
+    Z.y = 220*height/1080;
+
+    f1.y = 200*height/1080;
+    f2.y = 180*height/1080;
+    f3.y = 165*height/1080;
+    f4.y = 150*height/1080;
+    f5.y = 150*height/1080;
+    f6.y = 165*height/1080;
+    f7.y = 180*height/1080;
+
+    struct Point awal, akhir;
+    awal.x = 960*width/1920;
+    awal.y = 870*height/1080;
+
+    akhir.x = 960*width/1920;
+    akhir.y = 251*height/1080;
+
+    clearShip(vinfo, finfo, fbp);
+
+    drawLines(A, B, vinfo, finfo, fbp);
+    drawLines(B, B, vinfo, finfo, fbp);
+    drawLines(C, B, vinfo, finfo, fbp);
+    drawLines(D, B, vinfo, finfo, fbp);
+    drawLines(E, B, vinfo, finfo, fbp);
+    drawLines(F, B, vinfo, finfo, fbp);
+    drawLines(G, B, vinfo, finfo, fbp);
+    drawLines(H, B, vinfo, finfo, fbp);
+    drawLines(f1, B, vinfo, finfo, fbp);
+    drawLines(f2, B, vinfo, finfo, fbp);
+ 
+    drawLines(f4, B, vinfo, finfo, fbp);
+    drawLines(f5, B, vinfo, finfo, fbp);
+ 
+
+    usleep(70000);
+    clearShip(vinfo, finfo, fbp);
+
+    drawLines(A, X, vinfo, finfo, fbp);
+    drawLines(B, X, vinfo, finfo, fbp);
+    drawLines(C, X, vinfo, finfo, fbp);
+    drawLines(D, X, vinfo, finfo, fbp);
+    drawLines(E, X, vinfo, finfo, fbp);
+    drawLines(F, X, vinfo, finfo, fbp);
+    drawLines(G, X, vinfo, finfo, fbp);
+    drawLines(H, X, vinfo, finfo, fbp);
+    drawLines(f1, X, vinfo, finfo, fbp);
+    drawLines(f2, X, vinfo, finfo, fbp);
+ 
+    drawLines(f4, X, vinfo, finfo, fbp);
+    drawLines(f5, X, vinfo, finfo, fbp);
+ 
+
+    usleep(70000);
+    clearShip(vinfo, finfo, fbp);
+
+    drawLines(A, E, vinfo, finfo, fbp);
+    drawLines(B, E, vinfo, finfo, fbp);
+    drawLines(C, E, vinfo, finfo, fbp);
+    drawLines(D, E, vinfo, finfo, fbp);
+    drawLines(E, E, vinfo, finfo, fbp);
+    drawLines(F, E, vinfo, finfo, fbp);
+    drawLines(G, E, vinfo, finfo, fbp);
+    drawLines(H, E, vinfo, finfo, fbp);
+    drawLines(f1, E, vinfo, finfo, fbp);
+    drawLines(f2, E, vinfo, finfo, fbp);
+ 
+    drawLines(f4, E, vinfo, finfo, fbp);
+    drawLines(f5, E, vinfo, finfo, fbp);
+ 
+    
+    usleep(70000);
+
+    clearShip(vinfo, finfo, fbp);
+
+    drawLines(A, Z, vinfo, finfo, fbp);
+    drawLines(B, Z, vinfo, finfo, fbp);
+    drawLines(C, Z, vinfo, finfo, fbp);
+    drawLines(D, Z, vinfo, finfo, fbp);
+    drawLines(E, Z, vinfo, finfo, fbp);
+    drawLines(F, Z, vinfo, finfo, fbp);
+    drawLines(G, Z, vinfo, finfo, fbp);
+    drawLines(H, Z, vinfo, finfo, fbp);
+    drawLines(f1, Z, vinfo, finfo, fbp);
+    drawLines(f2, Z, vinfo, finfo, fbp);
+ 
+    drawLines(f4, Z, vinfo, finfo, fbp);
+    drawLines(f5, Z, vinfo, finfo, fbp);
+ 
+
+    usleep(70000);
+    clearShip(vinfo, finfo, fbp);
+}
+
 void drawShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp,  int direction) {
     struct Point A, B, C, D, E, F, G, H;
     struct Point f1,f2,f3,f4,f5,f6,f7;
@@ -412,7 +558,11 @@ int main(void)
         if(offset.y <= 251*height/1080 && (xoffset+20*width/1920<=960*width/1920 && xoffset+100*width/1920>=960*width/1920)) {
             drawBullet(offset, vinfo, finfo, fbp);
             clearShot(vinfo, finfo, fbp);
-            // break;
+            while(1)
+                destroyShip(xoffset, vinfo, finfo, fbp, direction);
+            sleep(1);
+            endwin();
+            return 0;
         } else {
             drawShip(xoffset, vinfo, finfo, fbp, direction);
         }
