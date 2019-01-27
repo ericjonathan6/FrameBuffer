@@ -32,13 +32,16 @@ int kbhit(void)
         return 0;
     }
 }
+int width = 1920;
+int height = 1080;
+int width_margin = 20;
 
 void clearShot(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
-    int y = 251;
+    int y = 251*height/1080;
     long int location = 0;
-    while((y<949)) {
+    while((y<949*height/1080)) {
         int x = 0;
-        while(x < 1900) {
+        while(x < width - width_margin*width/1080) {
             location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
                     (y+vinfo.yoffset) * finfo.line_length;
 
@@ -116,63 +119,63 @@ void drawShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeni
 
     if (direction == 1) {
         A.x = xoffset;
-        B.x = xoffset + 30;
-        C.x = xoffset + 30;
-        D.x = xoffset + 60;
-        E.x = xoffset + 70;    
-        F.x = xoffset + 110;
-        G.x = xoffset + 90;
-        H.x = xoffset + 10;
+        B.x = xoffset + 30*width/1920;
+        C.x = xoffset + 30*width/1920;
+        D.x = xoffset + 60*width/1920;
+        E.x = xoffset + 70*width/1920;    
+        F.x = xoffset + 110*width/1920;
+        G.x = xoffset + 90*width/1920;
+        H.x = xoffset + 10*width/1920;
 
-        f1.x = xoffset + 15;
-        f2.x = xoffset + 15;
-        f3.x = xoffset + 15;
-        f4.x = xoffset + 15;
-        f5.x = xoffset - 15;
-        f6.x = xoffset - 15;
-        f7.x = xoffset - 15;
+        f1.x = xoffset + 15*width/1920;
+        f2.x = xoffset + 15*width/1920;
+        f3.x = xoffset + 15*width/1920;
+        f4.x = xoffset + 15*width/1920;
+        f5.x = xoffset - 15*width/1920;
+        f6.x = xoffset - 15*width/1920;
+        f7.x = xoffset - 15*width/1920;
 
     } else {
         A.x = xoffset;        
-        B.x = xoffset + 40;
-        C.x = xoffset + 50;
-        D.x = xoffset + 80;
-        E.x = xoffset + 80;
-        F.x = xoffset + 110;
-        G.x = xoffset + 100;
-        H.x = xoffset + 20;
+        B.x = xoffset + 40*width/1920;
+        C.x = xoffset + 50*width/1920;
+        D.x = xoffset + 80*width/1920;
+        E.x = xoffset + 80*width/1920;
+        F.x = xoffset + 110*width/1920;
+        G.x = xoffset + 100*width/1920;
+        H.x = xoffset + 20*width/1920;
     
-        f1.x = xoffset + 95;
-        f2.x = xoffset + 95;
-        f3.x = xoffset + 95;
-        f4.x = xoffset + 95;
-        f5.x = xoffset + 125;
-        f6.x = xoffset + 125;
-        f7.x = xoffset + 125;
+        f1.x = xoffset + 95*width/1920;
+        f2.x = xoffset + 95*width/1920;
+        f3.x = xoffset + 95*width/1920;
+        f4.x = xoffset + 95*width/1920;
+        f5.x = xoffset + 125*width/1920;
+        f6.x = xoffset + 125*width/1920;
+        f7.x = xoffset + 125*width/1920;
     }
-    A.y = 200;
-    B.y = 200;
-    C.y = 165;
-    D.y = 165;
-    E.y = 200;
-    F.y = 200;
-    G.y = 250;
-    H.y = 250;
+    A.y = 200*height/1080;
+    B.y = 200*height/1080;
+    C.y = 165*height/1080;
+    D.y = 165*height/1080;
+    E.y = 200*height/1080;
+    F.y = 200*height/1080;
+    G.y = 250*height/1080;
+    H.y = 250*height/1080;
 
-    f1.y = 200;
-    f2.y = 180;
-    f3.y = 165;
-    f4.y = 150;
-    f5.y = 150;
-    f6.y = 165;
-    f7.y = 180;
+    f1.y = 200*height/1080;
+    f2.y = 180*height/1080;
+    f3.y = 165*height/1080;
+    f4.y = 150*height/1080;
+    f5.y = 150*height/1080;
+    f6.y = 165*height/1080;
+    f7.y = 180*height/1080;
 
     struct Point awal, akhir;
-    awal.x = 960;
-    awal.y = 870;
+    awal.x = 960*width/1920;
+    awal.y = 870*height/1080;
 
-    akhir.x = 960;
-    akhir.y = 251;
+    akhir.x = 960*width/1920;
+    akhir.y = 251*height/1080;
 
     drawLines(A, F, vinfo, finfo, fbp);
     drawLines(B, C, vinfo, finfo, fbp);
@@ -195,9 +198,9 @@ void drawShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeni
 void clearShip(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
     int y = 0;
     long int location = 0;
-    while((y<251)) {
+    while((y<251*height/1080)) {
         int x = 0;
-        while(x < 1900) {
+        while(x < width) {
             location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
                     (y+vinfo.yoffset) * finfo.line_length;
 
@@ -215,17 +218,17 @@ void clearShip(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, c
 
 void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
     struct Point A, B, C, D;
-    A.x = offset.x - 14;
-    A.y = offset.y + 60;
+    A.x = offset.x - 14*width/1920;
+    A.y = offset.y + 60*height/1080;
 
-    B.x = offset.x + 14;
-    B.y = offset.y + 60;
+    B.x = offset.x + 14*width/1920;
+    B.y = offset.y + 60*height/1080;
 
-    C.x = offset.x + 14;
-    C.y = offset.y + 20;
+    C.x = offset.x + 14*width/1920;
+    C.y = offset.y + 20*height/1080;
 
-    D.x = offset.x - 14;
-    D.y = offset.y + 20;
+    D.x = offset.x - 14*width/1920;
+    D.y = offset.y + 20*height/1080;
 
     drawLines(A, B, vinfo, finfo, fbp);
     drawLines(B, C, vinfo, finfo, fbp);
@@ -239,65 +242,65 @@ void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_f
 
 void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
     struct Point A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T;
-    A.x = 900;
-    A.y = 1050;
+    A.x = 900*width/1920;
+    A.y = 1050*height/1080;
 
-    B.x = 1020;
-    B.y = 1050;
+    B.x = 1020*width/1920;
+    B.y = 1050*height/1080;
 
-    C.x = 1020;
-    C.y = 1020;
+    C.x = 1020*width/1920;
+    C.y = 1020*height/1080;
 
-    D.x = 985;
-    D.y = 995;
+    D.x = 985*width/1920;
+    D.y = 995*height/1080;
 
-    E.x = 985;
-    E.y = 965;
+    E.x = 985*width/1920;
+    E.y = 965*height/1080;
 
-    F.x = 990;
-    F.y = 965;
+    F.x = 990*width/1920;
+    F.y = 965*height/1080;
 
-    G.x = 990;
-    G.y = 960;
+    G.x = 990*width/1920;
+    G.y = 960*height/1080;
 
-    H.x = 930;
-    H.y = 960;
+    H.x = 930*width/1920;
+    H.y = 960*height/1080;
 
-    I.x = 930;
-    I.y = 965;
+    I.x = 930*width/1920;
+    I.y = 965*height/1080;
 
-    J.x = 935;
-    J.y = 965;
+    J.x = 935*width/1920;
+    J.y = 965*height/1080;
 
-    K.x = 935;
-    K.y = 995;
+    K.x = 935*width/1920;
+    K.y = 995*height/1080;
 
-    L.x = 900;
-    L.y = 1020;
+    L.x = 900*width/1920;
+    L.y = 1020*height/1080;
 
-    M.x = 935;
-    M.y = 1050;
+    M.x = 935*width/1920;
+    M.y = 1050*height/1080;
 
-    N.x = 985;
-    N.y = 1050;
+    N.x = 985*width/1920;
+    N.y = 1050*height/1080;
 
-    O.x = 935;
-    O.y = 1005;
+    O.x = 935*width/1920;
+    O.y = 1005*height/1080;
 
-    P.x = 985;
-    P.y = 1005;
+    P.x = 985*width/1920;
+    P.y = 1005*height/1080;
 
-    Q.x = 945;
-    Q.y = 960;
+    Q.x = 945*width/1920;
+    Q.y = 960*height/1080;
 
-    R.x = 975;
-    R.y = 960;
+    R.x = 975*width/1920;
+    R.y = 960*height/1080;
 
-    S.x = 975;
-    S.y = 950;
+    S.x = 975*width/1920;
+    S.y = 950*height/1080;
 
-    T.x = 945;
-    T.y = 950;
+    T.x = 945*width/1920;
+    T.y = 950*height/1080;
 
     drawLines(A, B, vinfo, finfo, fbp);
     drawLines(B, C, vinfo, finfo, fbp);
@@ -371,15 +374,16 @@ int main(void)
     printf("The framebuffer device was mapped to memory successfully.\n");
 
     int direction = 1;
+
     struct Point offset;
-    offset.x = 960;
-    offset.y = 890;
+    offset.x = 960*width/1920;
+    offset.y = 890*height/1080;
 
     x = 0; y = 0;       // Where we are going to put the pixel
 
-    while( y < 1079 ) {
+    while( y < height-1 ) {
         x = 0;
-        while( x < 1919 ) {
+        while( x < width-1 ) {
             location = (x + vinfo.xoffset) * (vinfo.bits_per_pixel / 8) +
                     (y+vinfo.yoffset) * finfo.line_length;
 
@@ -395,7 +399,6 @@ int main(void)
     }
 
     int destroyed = 0;
-    int xoffset = 30;
     int shot = 0;
 
     initscr();
@@ -403,9 +406,10 @@ int main(void)
     noecho();
     nodelay(stdscr, TRUE);
     scrollok(stdscr, TRUE);
-    while(1) {
-        drawCannon(vinfo, finfo, fbp);
-        if(offset.y <= 251 && (xoffset+20<=960 && xoffset+100>=960)) {
+    int xoffset = 30*width/1920;
+    while(1) {        
+        drawCannon(vinfo, finfo, fbp);    
+        if(offset.y <= 251*height/1080 && (xoffset+20*width/1920<=960*width/1920 && xoffset+100*width/1920>=960*width/1920)) {
             drawBullet(offset, vinfo, finfo, fbp);
             clearShot(vinfo, finfo, fbp);
             // break;
@@ -421,34 +425,32 @@ int main(void)
         }
         if(shot == 1) {
             drawBullet(offset, vinfo, finfo, fbp);
-             offset.y -= 10;
+            offset.y -= 10*height/1080;
         }
         usleep(50000);
         clearShip(vinfo, finfo, fbp);
         clearShot(vinfo, finfo, fbp);
         if(direction) {
-            xoffset += 5;
+            xoffset += 5*width/1920;
         } else {
-            xoffset -=5;
+            xoffset -= 5*width/1920;
         }
 
-        if(xoffset < 30) {
+        if(xoffset < 30*width/1920) {
             direction = 1;
         }
 
-        if(xoffset > 1760) {
+        if(xoffset > 1760*width/1920) {
             direction = 0;
         }
 
         if(offset.y < 1) {
-            offset.y = 890;
+            offset.y = 890*height/1080;
             shot = 0;
         }
-                
-        
     }
 
     munmap(fbp, screensize);
     close(fbfd);
     return 0;
-} 
+}
