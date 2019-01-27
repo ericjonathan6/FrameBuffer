@@ -205,17 +205,17 @@ void clearShip(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, c
 
 void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
     struct Point A, B, C, D;
-    A.x = offset.x - 14;
-    A.y = offset.y + 60;
+    A.x = offset.x - 14*width/1920;
+    A.y = offset.y + 60*height/1080;
 
-    B.x = offset.x + 14;
-    B.y = offset.y + 60;
+    B.x = offset.x + 14*width/1920;
+    B.y = offset.y + 60*height/1080;
 
-    C.x = offset.x + 14;
-    C.y = offset.y + 20;
+    C.x = offset.x + 14*width/1920;
+    C.y = offset.y + 20*height/1080;
 
-    D.x = offset.x - 14;
-    D.y = offset.y + 20;
+    D.x = offset.x - 14*width/1920;
+    D.y = offset.y + 20*height/1080;
 
     drawLines(A, B, vinfo, finfo, fbp);
     drawLines(B, C, vinfo, finfo, fbp);
