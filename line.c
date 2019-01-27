@@ -386,10 +386,10 @@ int main()
     }
 
     int destroyed = 0;
-    int xoffset = 30;
+    int xoffset = 30*width/1920;
     drawCannon(vinfo, finfo, fbp);
     while(1) {            
-        if(offset.y <= 251 && (xoffset+20<=960 && xoffset+100>=960)) {
+        if(offset.y <= 251*height/1080 && (xoffset+20*width/1920<=960*width/1920 && xoffset+100*width/1920>=960*width/1920)) {
             drawBullet(offset, vinfo, finfo, fbp);
             clearShot(vinfo, finfo, fbp);
             // break;
