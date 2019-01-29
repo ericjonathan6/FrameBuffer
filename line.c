@@ -21,7 +21,11 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 
 struct Point { 
    int x, y; 
-};  
+};
+
+struct Color {
+    unsigned char red, green, blue, opacity;
+};
 
 int kbhit(void)
 {
@@ -85,7 +89,7 @@ void clearShot(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, c
     }
 }
   
-void drawLines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) { 
+void drawLines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp, struct Color color) { 
     int dx = B.x - A.x;
     int dy = B.y - A.y;
     int x0 = A.x, y0 = A.y;
@@ -111,10 +115,10 @@ void drawLines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, s
                         (y0+vinfo.yoffset) * finfo.line_length;
 
             if (vinfo.bits_per_pixel == 32) {
-                *(fbp + location) = 255;        // Some blue
-                *(fbp + location + 1) = 255;     // A little green
-                *(fbp + location + 2) = 255;    // A lot of red
-                *(fbp + location + 3) = 0;      // No transparency
+                *(fbp + location) = color.blue;        // Some blue
+                *(fbp + location + 1) = color.green;     // A little green
+                *(fbp + location + 2) = color.red;    // A lot of red
+                *(fbp + location + 3) = color.opacity;      // No transparency
             }
         }
     } else {
@@ -132,10 +136,10 @@ void drawLines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, s
                         (y0+vinfo.yoffset) * finfo.line_length;
 
             if (vinfo.bits_per_pixel == 32) {
-                *(fbp + location) = 255;        // Some blue
-                *(fbp + location + 1) = 255;     // A little green
-                *(fbp + location + 2) = 255;    // A lot of red
-                *(fbp + location + 3) = 0;      // No transparency
+                *(fbp + location) = color.blue;        // Some blue
+                *(fbp + location + 1) = color.green;     // A little green
+                *(fbp + location + 2) = color.red;    // A lot of red
+                *(fbp + location + 3) = color.opacity;      // No transparency
             }
         }
     }
@@ -213,74 +217,81 @@ void destroyShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_scre
 
     clearShip(vinfo, finfo, fbp);
 
-    drawLines(A, B, vinfo, finfo, fbp);
-    drawLines(B, B, vinfo, finfo, fbp);
-    drawLines(C, B, vinfo, finfo, fbp);
-    drawLines(D, B, vinfo, finfo, fbp);
-    drawLines(E, B, vinfo, finfo, fbp);
-    drawLines(F, B, vinfo, finfo, fbp);
-    drawLines(G, B, vinfo, finfo, fbp);
-    drawLines(H, B, vinfo, finfo, fbp);
-    drawLines(f1, B, vinfo, finfo, fbp);
-    drawLines(f2, B, vinfo, finfo, fbp);
+    struct Color color;
+
+    color.red = 255;
+    color.green = 255;
+    color.blue = 255;
+    color.opacity = 0;
+
+    drawLines(A, B, vinfo, finfo, fbp, color);
+    drawLines(B, B, vinfo, finfo, fbp, color);
+    drawLines(C, B, vinfo, finfo, fbp, color);
+    drawLines(D, B, vinfo, finfo, fbp, color);
+    drawLines(E, B, vinfo, finfo, fbp, color);
+    drawLines(F, B, vinfo, finfo, fbp, color);
+    drawLines(G, B, vinfo, finfo, fbp, color);
+    drawLines(H, B, vinfo, finfo, fbp, color);
+    drawLines(f1, B, vinfo, finfo, fbp, color);
+    drawLines(f2, B, vinfo, finfo, fbp, color);
  
-    drawLines(f4, B, vinfo, finfo, fbp);
-    drawLines(f5, B, vinfo, finfo, fbp);
+    drawLines(f4, B, vinfo, finfo, fbp, color);
+    drawLines(f5, B, vinfo, finfo, fbp, color);
  
 
     usleep(70000);
     clearShip(vinfo, finfo, fbp);
 
-    drawLines(A, X, vinfo, finfo, fbp);
-    drawLines(B, X, vinfo, finfo, fbp);
-    drawLines(C, X, vinfo, finfo, fbp);
-    drawLines(D, X, vinfo, finfo, fbp);
-    drawLines(E, X, vinfo, finfo, fbp);
-    drawLines(F, X, vinfo, finfo, fbp);
-    drawLines(G, X, vinfo, finfo, fbp);
-    drawLines(H, X, vinfo, finfo, fbp);
-    drawLines(f1, X, vinfo, finfo, fbp);
-    drawLines(f2, X, vinfo, finfo, fbp);
+    drawLines(A, X, vinfo, finfo, fbp, color);
+    drawLines(B, X, vinfo, finfo, fbp, color);
+    drawLines(C, X, vinfo, finfo, fbp, color);
+    drawLines(D, X, vinfo, finfo, fbp, color);
+    drawLines(E, X, vinfo, finfo, fbp, color);
+    drawLines(F, X, vinfo, finfo, fbp, color);
+    drawLines(G, X, vinfo, finfo, fbp, color);
+    drawLines(H, X, vinfo, finfo, fbp, color);
+    drawLines(f1, X, vinfo, finfo, fbp, color);
+    drawLines(f2, X, vinfo, finfo, fbp, color);
  
-    drawLines(f4, X, vinfo, finfo, fbp);
-    drawLines(f5, X, vinfo, finfo, fbp);
+    drawLines(f4, X, vinfo, finfo, fbp, color);
+    drawLines(f5, X, vinfo, finfo, fbp, color);
  
 
     usleep(70000);
     clearShip(vinfo, finfo, fbp);
 
-    drawLines(A, E, vinfo, finfo, fbp);
-    drawLines(B, E, vinfo, finfo, fbp);
-    drawLines(C, E, vinfo, finfo, fbp);
-    drawLines(D, E, vinfo, finfo, fbp);
-    drawLines(E, E, vinfo, finfo, fbp);
-    drawLines(F, E, vinfo, finfo, fbp);
-    drawLines(G, E, vinfo, finfo, fbp);
-    drawLines(H, E, vinfo, finfo, fbp);
-    drawLines(f1, E, vinfo, finfo, fbp);
-    drawLines(f2, E, vinfo, finfo, fbp);
+    drawLines(A, E, vinfo, finfo, fbp, color);
+    drawLines(B, E, vinfo, finfo, fbp, color);
+    drawLines(C, E, vinfo, finfo, fbp, color);
+    drawLines(D, E, vinfo, finfo, fbp, color);
+    drawLines(E, E, vinfo, finfo, fbp, color);
+    drawLines(F, E, vinfo, finfo, fbp, color);
+    drawLines(G, E, vinfo, finfo, fbp, color);
+    drawLines(H, E, vinfo, finfo, fbp, color);
+    drawLines(f1, E, vinfo, finfo, fbp, color);
+    drawLines(f2, E, vinfo, finfo, fbp, color);
  
-    drawLines(f4, E, vinfo, finfo, fbp);
-    drawLines(f5, E, vinfo, finfo, fbp);
+    drawLines(f4, E, vinfo, finfo, fbp, color);
+    drawLines(f5, E, vinfo, finfo, fbp, color);
  
     
     usleep(70000);
 
     clearShip(vinfo, finfo, fbp);
 
-    drawLines(A, Z, vinfo, finfo, fbp);
-    drawLines(B, Z, vinfo, finfo, fbp);
-    drawLines(C, Z, vinfo, finfo, fbp);
-    drawLines(D, Z, vinfo, finfo, fbp);
-    drawLines(E, Z, vinfo, finfo, fbp);
-    drawLines(F, Z, vinfo, finfo, fbp);
-    drawLines(G, Z, vinfo, finfo, fbp);
-    drawLines(H, Z, vinfo, finfo, fbp);
-    drawLines(f1, Z, vinfo, finfo, fbp);
-    drawLines(f2, Z, vinfo, finfo, fbp);
+    drawLines(A, Z, vinfo, finfo, fbp, color);
+    drawLines(B, Z, vinfo, finfo, fbp, color);
+    drawLines(C, Z, vinfo, finfo, fbp, color);
+    drawLines(D, Z, vinfo, finfo, fbp, color);
+    drawLines(E, Z, vinfo, finfo, fbp, color);
+    drawLines(F, Z, vinfo, finfo, fbp, color);
+    drawLines(G, Z, vinfo, finfo, fbp, color);
+    drawLines(H, Z, vinfo, finfo, fbp, color);
+    drawLines(f1, Z, vinfo, finfo, fbp, color);
+    drawLines(f2, Z, vinfo, finfo, fbp, color);
  
-    drawLines(f4, Z, vinfo, finfo, fbp);
-    drawLines(f5, Z, vinfo, finfo, fbp);
+    drawLines(f4, Z, vinfo, finfo, fbp, color);
+    drawLines(f5, Z, vinfo, finfo, fbp, color);
  
 
     usleep(70000);
@@ -351,19 +362,25 @@ void drawShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeni
     akhir.x = 960*width/1920;
     akhir.y = 251*height/1080;
 
-    drawLines(A, F, vinfo, finfo, fbp);
-    drawLines(B, C, vinfo, finfo, fbp);
-    drawLines(C, D, vinfo, finfo, fbp);
-    drawLines(D, E, vinfo, finfo, fbp);
-    drawLines(F, G, vinfo, finfo, fbp);
-    drawLines(G, H, vinfo, finfo, fbp);
-    drawLines(H, A, vinfo, finfo, fbp);
+    struct Color color;
+    color.red = 0;
+    color.green = 255;
+    color.blue = 0;
+    color.opacity = 0;
 
-    drawLines(f1, f4, vinfo, finfo, fbp);
-    drawLines(f4, f5, vinfo, finfo, fbp);
-    drawLines(f5, f7, vinfo, finfo, fbp);
-    drawLines(f2, f7, vinfo, finfo, fbp);
-    drawLines(f3, f6, vinfo, finfo, fbp);
+    drawLines(A, F, vinfo, finfo, fbp, color);
+    drawLines(B, C, vinfo, finfo, fbp, color);
+    drawLines(C, D, vinfo, finfo, fbp, color);
+    drawLines(D, E, vinfo, finfo, fbp, color);
+    drawLines(F, G, vinfo, finfo, fbp, color);
+    drawLines(G, H, vinfo, finfo, fbp, color);
+    drawLines(H, A, vinfo, finfo, fbp, color);
+
+    drawLines(f1, f4, vinfo, finfo, fbp, color);
+    drawLines(f4, f5, vinfo, finfo, fbp, color);
+    drawLines(f5, f7, vinfo, finfo, fbp, color);
+    drawLines(f2, f7, vinfo, finfo, fbp, color);
+    drawLines(f3, f6, vinfo, finfo, fbp, color);
 
 
 
@@ -422,13 +439,19 @@ void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_f
         offset = rotate_point(E.x, E.y, 0.523, offset);
     }
 
-    drawLines(A, B, vinfo, finfo, fbp);
-    drawLines(B, C, vinfo, finfo, fbp);
-    drawLines(C, D, vinfo, finfo, fbp);
-    drawLines(D, A, vinfo, finfo, fbp);
+    struct Color color;
+    color.red = 255;
+    color.green = 0;
+    color.blue = 0;
+    color.opacity = 0;
 
-    drawLines(offset, C, vinfo, finfo, fbp);
-    drawLines(offset, D, vinfo, finfo, fbp);
+    drawLines(A, B, vinfo, finfo, fbp, color);
+    drawLines(B, C, vinfo, finfo, fbp, color);
+    drawLines(C, D, vinfo, finfo, fbp, color);
+    drawLines(D, A, vinfo, finfo, fbp, color);
+
+    drawLines(offset, C, vinfo, finfo, fbp, color);
+    drawLines(offset, D, vinfo, finfo, fbp, color);
 
 }
 
@@ -494,29 +517,35 @@ void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, 
     T.x = 945*width/1920;
     T.y = 950*height/1080;
 
-    drawLines(A, B, vinfo, finfo, fbp);
-    drawLines(B, C, vinfo, finfo, fbp);
-    drawLines(C, D, vinfo, finfo, fbp);
-    drawLines(D, E, vinfo, finfo, fbp);
-    drawLines(E, F, vinfo, finfo, fbp);
-    drawLines(F, G, vinfo, finfo, fbp);
-    drawLines(G, H, vinfo, finfo, fbp);
-    drawLines(H, I, vinfo, finfo, fbp);
-    drawLines(I, J, vinfo, finfo, fbp);
-    drawLines(J, K, vinfo, finfo, fbp);
-    drawLines(K, L, vinfo, finfo, fbp);
-    drawLines(L, A, vinfo, finfo, fbp);
+    struct Color color;
+    color.red = 0;
+    color.blue = 255;
+    color.green = 0;
+    color.opacity = 0;
 
-    drawLines(F, I, vinfo, finfo, fbp);
-    drawLines(M, K, vinfo, finfo, fbp);
-    drawLines(N, D, vinfo, finfo, fbp);
-    drawLines(E, J, vinfo, finfo, fbp);
-    drawLines(K, D, vinfo, finfo, fbp);
+    drawLines(A, B, vinfo, finfo, fbp, color);
+    drawLines(B, C, vinfo, finfo, fbp, color);
+    drawLines(C, D, vinfo, finfo, fbp, color);
+    drawLines(D, E, vinfo, finfo, fbp, color);
+    drawLines(E, F, vinfo, finfo, fbp, color);
+    drawLines(F, G, vinfo, finfo, fbp, color);
+    drawLines(G, H, vinfo, finfo, fbp, color);
+    drawLines(H, I, vinfo, finfo, fbp, color);
+    drawLines(I, J, vinfo, finfo, fbp, color);
+    drawLines(J, K, vinfo, finfo, fbp, color);
+    drawLines(K, L, vinfo, finfo, fbp, color);
+    drawLines(L, A, vinfo, finfo, fbp, color);
 
-    drawLines(O, P, vinfo, finfo, fbp);
-    drawLines(R, S, vinfo, finfo, fbp);
-    drawLines(S, T, vinfo, finfo, fbp);
-    drawLines(T, Q, vinfo, finfo, fbp);
+    drawLines(F, I, vinfo, finfo, fbp, color);
+    drawLines(M, K, vinfo, finfo, fbp, color);
+    drawLines(N, D, vinfo, finfo, fbp, color);
+    drawLines(E, J, vinfo, finfo, fbp, color);
+    drawLines(K, D, vinfo, finfo, fbp, color);
+
+    drawLines(O, P, vinfo, finfo, fbp, color);
+    drawLines(R, S, vinfo, finfo, fbp, color);
+    drawLines(S, T, vinfo, finfo, fbp, color);
+    drawLines(T, Q, vinfo, finfo, fbp, color);
 
 }
 
