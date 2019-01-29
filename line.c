@@ -68,7 +68,7 @@ struct Point find_center(struct Point A, struct Point B, struct Point C, struct 
 }
 
 void clearShot(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
-    int y = 251 * WIDTH / 1080;
+    int y = 251 * HEIGHT / 1080;
     long int location = 0;
 
     while((y < 949 * HEIGHT / 1080)) {
