@@ -624,8 +624,14 @@ int main(void)
     int xoffset = 30 * WIDTH / 1920;
    
     while(1) {        
-        drawCannon(vinfo, finfo, fbp);    
-        if(offset.y <= (251 * HEIGHT / 1080) && ((xoffset + 20 * WIDTH / 1920) <= (960 * WIDTH / 1920) && (xoffset + 100 * WIDTH / 1920) >= (960 * WIDTH / 1920))) {
+        drawCannon(vinfo, finfo, fbp);
+
+        if((offset.y <= 251*HEIGHT/1080 && 
+        (xoffset+20*WIDTH/1920<=960*WIDTH/1920 && xoffset+100*WIDTH/1920>=960*WIDTH/1920) && (shot == 0)) ||
+        (offset.y <= 251*HEIGHT/1080 && 
+        (xoffset+20*WIDTH/1920<=401*WIDTH/1920 && xoffset+100*WIDTH/1920>=401*WIDTH/1920) && (shot == 1)) ||
+        (offset.y <= 251*HEIGHT/1080 && 
+        (xoffset+20*WIDTH/1920<=1519*WIDTH/1920 && xoffset+100*WIDTH/1920>=1519*WIDTH/1920) && (shot == 2))) {
             drawBullet(offset, vinfo, finfo, fbp, 0);
             clearShot(vinfo, finfo, fbp);
             while(1)
