@@ -19,8 +19,8 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 1900;
+const int HEIGHT = 1000;
 const int WIDTH_MARGIN = 20;
 
 struct Point { 
@@ -75,7 +75,7 @@ void clearShot(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, c
     int y = 251 * HEIGHT / 1080;
     long int location = 0;
 
-    while((y < 949 * HEIGHT / 1080)) {
+    while((y < 950 * HEIGHT / 1080)) {
         int x = 0;
         while(x < WIDTH - WIDTH_MARGIN * WIDTH / 1080) {
             location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
@@ -623,7 +623,7 @@ int main(void)
 
     struct Point offset;
     offset.x = 960 * WIDTH / 1920;
-    offset.y = 890 * HEIGHT / 1080;
+    offset.y = 885 * HEIGHT / 1080;
 
     x = 0; y = 0;       // Where we are going to put the pixel
 
@@ -659,12 +659,8 @@ int main(void)
         drawCannon(vinfo, finfo, fbp);
 
         if(
-            (offset.y <= 251 * HEIGHT / 1080 && 
-            (xoffset + 20*WIDTH / 1920 <= 960 * WIDTH / 1920 && xoffset + 100 * WIDTH / 1920 >= 960 * WIDTH / 1920) && (shot == 0)) ||
-            (offset.y <= 251 * HEIGHT / 1080 && 
-            (xoffset + 20 * WIDTH / 1920 <= 401 * WIDTH / 1920 && xoffset + 100 * WIDTH / 1920 >= 401 * WIDTH / 1920) && (shot == 1)) ||
-            (offset.y <= 251 * HEIGHT / 1080 && 
-            (xoffset + 20 * WIDTH / 1920 <= 1519 * WIDTH / 1920 && xoffset + 100 * WIDTH / 1920 >= 1519 * WIDTH / 1920) && (shot == 2))
+            offset.y <= 251 * HEIGHT / 1080 && 
+            (xoffset + 20*WIDTH / 1920 <= offset.x && xoffset + 100 * WIDTH / 1920 >= offset.x)
         ) {
             drawBullet(offset, vinfo, finfo, fbp, 0);
             clearShot(vinfo, finfo, fbp);
@@ -719,7 +715,7 @@ int main(void)
         }
 
         if((offset.y < 1) || (offset.x < 1)) {
-            offset.y = 890 * HEIGHT / 1080;
+            offset.y = 885 * HEIGHT / 1080;
             offset.x = 960 * WIDTH / 1920;
             shot = 0;
         }
