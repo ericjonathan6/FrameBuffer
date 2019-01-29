@@ -8,6 +8,7 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 */
 
 #include <ncurses.h>
+#include <math.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -32,9 +33,36 @@ int kbhit(void)
         return 0;
     }
 }
-int width = 1920;
-int height = 1080;
+int width = 800;
+int height = 600;
 int width_margin = 20;
+
+struct Point rotate_point(int cx,int cy,float angle,struct Point p)
+{
+  float s = sin(angle);
+  float c = cos(angle);
+
+  // translate point back to origin:
+  p.x -= cx;
+  p.y -= cy;
+
+  // rotate point
+  float xnew = p.x * c - p.y * s;
+  float ynew = p.x * s + p.y * c;
+
+  // translate point back:
+  p.x = ((int) xnew) + cx;
+  p.y = ((int) ynew) + cy;
+  return p;
+}
+
+struct Point find_center(struct Point A, struct Point B, struct Point C, struct Point D)
+{
+  struct Point E;
+  E.x = (int) (A.x+B.x)/2;
+  E.y = (int) (A.y+D.y)/2;
+  return E;
+}
 
 void clearShot(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
     int y = 251*height/1080;
@@ -362,8 +390,8 @@ void clearShip(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, c
     }
 }
 
-void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
-    struct Point A, B, C, D;
+void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp, int rotate) {
+    struct Point A, B, C, D, E;
     A.x = offset.x - 14*width/1920;
     A.y = offset.y + 60*height/1080;
 
@@ -375,6 +403,24 @@ void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_f
 
     D.x = offset.x - 14*width/1920;
     D.y = offset.y + 20*height/1080;
+    
+    if (rotate == 1) {
+        E = find_center(D, C, B, A);
+        A = rotate_point(E.x, E.y, -0.523, A);
+        B = rotate_point(E.x, E.y, -0.523, B);
+        C = rotate_point(E.x, E.y, -0.523, C);
+        D = rotate_point(E.x, E.y, -0.523, D);
+        offset = rotate_point(E.x, E.y, -0.523, offset);
+    }
+
+    if (rotate == 2) {
+        E = find_center(D, C, B, A);
+        A = rotate_point(E.x, E.y, 0.523, A);
+        B = rotate_point(E.x, E.y, 0.523, B);
+        C = rotate_point(E.x, E.y, 0.523, C);
+        D = rotate_point(E.x, E.y, 0.523, D);
+        offset = rotate_point(E.x, E.y, 0.523, offset);
+    }
 
     drawLines(A, B, vinfo, finfo, fbp);
     drawLines(B, C, vinfo, finfo, fbp);
@@ -556,7 +602,7 @@ int main(void)
     while(1) {        
         drawCannon(vinfo, finfo, fbp);    
         if(offset.y <= 251*height/1080 && (xoffset+20*width/1920<=960*width/1920 && xoffset+100*width/1920>=960*width/1920)) {
-            drawBullet(offset, vinfo, finfo, fbp);
+            drawBullet(offset, vinfo, finfo, fbp, 0);
             clearShot(vinfo, finfo, fbp);
             while(1)
                 destroyShip(xoffset, vinfo, finfo, fbp, direction);
@@ -569,13 +615,27 @@ int main(void)
          if (kbhit()) {
             int n = getch();
             refresh();
-            if (n == 97) {
+            if (n == 119) {
                 shot = 1;
+            } else if (n == 97) {
+                shot = 2;
+            } else if (n == 100) {
+                shot = 3;
             }
         }
         if(shot == 1) {
-            drawBullet(offset, vinfo, finfo, fbp);
+            drawBullet(offset, vinfo, finfo, fbp, 0);
             offset.y -= 10*height/1080;
+        }
+        else if(shot == 2) {
+            drawBullet(offset, vinfo, finfo, fbp, 1);
+            offset.y -= 10*height/1080;
+            offset.x -= 10*height/1080;
+        }
+        else if(shot == 3) {
+            drawBullet(offset, vinfo, finfo, fbp, 2);
+            offset.y -= 10*height/1080;
+            offset.x += 10*height/1080;
         }
         usleep(50000);
         clearShip(vinfo, finfo, fbp);
@@ -594,8 +654,9 @@ int main(void)
             direction = 0;
         }
 
-        if(offset.y < 1) {
+        if((offset.y < 1) || (offset.x < 1)) {
             offset.y = 890*height/1080;
+            offset.x = 960*width/1920;
             shot = 0;
         }
     }
