@@ -431,8 +431,13 @@ void drawShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeni
 
     drawColor(A.x+1, A.y+1, vinfo, finfo, fbp, color);
     drawColor(C.x+1, C.y+1, vinfo, finfo, fbp, color);
-    drawColor(f6.x+1, f6.y+1, vinfo, finfo, fbp, color);
-    drawColor(f5.x+1, f5.y+1, vinfo, finfo, fbp, color);
+    if (direction == 1) {
+        drawColor(f6.x+1, f6.y+1, vinfo, finfo, fbp, color);
+        drawColor(f5.x+1, f5.y+1, vinfo, finfo, fbp, color);
+    } else {
+        drawColor(f5.x-1, f5.y+1, vinfo, finfo, fbp, color);
+        drawColor(f6.x-1, f6.y+1, vinfo, finfo, fbp, color);
+    }
 
 }
 
@@ -458,7 +463,7 @@ void clearShip(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, c
 }
 
 void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp, int rotate) {
-    struct Point A, B, C, D, E;
+    struct Point A, B, C, D, E, U;
     A.x = offset.x - 14 * WIDTH / 1920;
     A.y = offset.y + 60 * HEIGHT / 1080;
 
@@ -471,12 +476,16 @@ void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_f
     D.x = offset.x - 14 * WIDTH / 1920;
     D.y = offset.y + 20 * HEIGHT / 1080;
     E = find_center(D, C, B, A);
+
+    U.x = E.x;
+    U.y = C.y-2;
     
     if (rotate == 1) {
         A = rotate_point(E.x, E.y, -0.523, A);
         B = rotate_point(E.x, E.y, -0.523, B);
         C = rotate_point(E.x, E.y, -0.523, C);
         D = rotate_point(E.x, E.y, -0.523, D);
+        U = rotate_point(E.x, E.y, -0.523, U);
         offset = rotate_point(E.x, E.y, -0.523, offset);
     }
 
@@ -485,6 +494,7 @@ void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_f
         B = rotate_point(E.x, E.y, 0.523, B);
         C = rotate_point(E.x, E.y, 0.523, C);
         D = rotate_point(E.x, E.y, 0.523, D);
+        U = rotate_point(E.x, E.y, 0.523, U);
         offset = rotate_point(E.x, E.y, 0.523, offset);
     }
 
@@ -503,7 +513,7 @@ void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_f
     drawLines(offset, D, vinfo, finfo, fbp, color);
 
     drawColor(E.x, E.y, vinfo, finfo, fbp, color);
-    // drawColor(E.x, D.y-1, vinfo, finfo, fbp, color);
+    drawColor(U.x, U.y, vinfo, finfo, fbp, color);
 
 }
 
@@ -570,8 +580,8 @@ void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, 
     T.y = 950 * HEIGHT / 1080;
 
     struct Color color;
-    color.red = 0;
-    color.blue = 255;
+    color.red = 255;
+    color.blue = 0;
     color.green = 0;
     color.opacity = 0;
 
@@ -601,9 +611,9 @@ void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, 
 
     // drawLines(C, L, vinfo, finfo, fbp, color);
 
-    drawColor(A.x+1, A.y-1, vinfo, finfo, fbp, color);
-    drawColor(find_center(N,M,P,O).x, find_center(N,M,P,O).y, vinfo, finfo, fbp, color);
-    drawColor(find_center(L,C,A,B).x, find_center(L,C,A,B).y, vinfo, finfo, fbp, color);
+    drawColor(E.x+2, E.y-3, vinfo, finfo, fbp, color);
+    // drawColor(find_center(N,M,P,O).x, find_center(N,M,P,O).y, vinfo, finfo, fbp, color);
+    // drawColor(find_center(L,C,A,B).x, find_center(L,C,A,B).y, vinfo, finfo, fbp, color);
 
 }
 
