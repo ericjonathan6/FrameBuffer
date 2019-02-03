@@ -580,8 +580,8 @@ void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, 
     T.y = 950 * HEIGHT / 1080;
 
     struct Color color;
-    color.red = 255;
-    color.blue = 0;
+    color.red = 0;
+    color.blue = 255;
     color.green = 0;
     color.opacity = 0;
 
@@ -611,7 +611,18 @@ void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, 
 
     // drawLines(C, L, vinfo, finfo, fbp, color);
 
-    drawColor(E.x+2, E.y-3, vinfo, finfo, fbp, color);
+    drawColor(E.x+1, E.y-1, vinfo, finfo, fbp, color);
+    drawColor(A.x+1, A.y-1, vinfo, finfo, fbp, color);
+    drawColor(I.x+1, I.y-1, vinfo, finfo, fbp, color);
+    drawColor(J.x+1, J.y-1, vinfo, finfo, fbp, color);
+    drawColor(K.x+1, K.y-1, vinfo, finfo, fbp, color);
+    drawColor(L.x+1, L.y-1, vinfo, finfo, fbp, color);
+    drawColor(M.x+1, M.y-1, vinfo, finfo, fbp, color);
+    drawColor(N.x+1, N.y-1, vinfo, finfo, fbp, color);
+    drawColor(O.x+1, O.y-1, vinfo, finfo, fbp, color);
+    drawColor(P.x+1, P.y-1, vinfo, finfo, fbp, color);
+    drawColor(Q.x+1, Q.y-1, vinfo, finfo, fbp, color);
+    // drawColor(R.x+1, R.y-1, vinfo, finfo, fbp, color);
     // drawColor(find_center(N,M,P,O).x, find_center(N,M,P,O).y, vinfo, finfo, fbp, color);
     // drawColor(find_center(L,C,A,B).x, find_center(L,C,A,B).y, vinfo, finfo, fbp, color);
 
