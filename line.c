@@ -19,8 +19,8 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 
-const int WIDTH = 1900;
-const int HEIGHT = 1000;
+const int WIDTH = 800;
+const int HEIGHT = 600;
 const int WIDTH_MARGIN = 20;
 
 struct Point { 
@@ -39,6 +39,37 @@ int kbhit(void)
         return 1;
     } else {
         return 0;
+    }
+}
+
+void drawColor(int x, int y, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp, struct Color color) {
+    // *fbp = color.blue;
+    long int location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                        (y+vinfo.yoffset) * finfo.line_length;
+    // if (vinfo.bits_per_pixel == 32) {
+    //     *(fbp + location) = color.blue;        // Some blue
+    //     *(fbp + location + 1) = color.green;     // A little green
+    //     *(fbp + location + 2) = color.red;    // A lot of red
+    //     *(fbp + location + 3) = color.opacity;      // No transparency
+    // }
+    if (vinfo.bits_per_pixel == 32) {
+        if  ( 
+            ( *(fbp + location) == 0) &&        // Some blue
+            ( *(fbp + location + 1) == 0 ) &&     // A little green
+            ( *(fbp + location + 2) == 0 ) &&   // A lot of red
+            ( *(fbp + location + 3) == 0 )
+            ) {
+               if (vinfo.bits_per_pixel == 32) {
+                    *(fbp + location) = color.blue;        // Some blue
+                    *(fbp + location + 1) = color.green;     // A little green
+                    *(fbp + location + 2) = color.red;    // A lot of red
+                    *(fbp + location + 3) = color.opacity;      // No transparency
+                }
+                drawColor(x+1,y,vinfo,finfo,fbp,color);
+                drawColor(x,y+1,vinfo,finfo,fbp,color);
+                drawColor(x-1,y,vinfo,finfo,fbp,color);
+                drawColor(x,y-1,vinfo,finfo,fbp,color);   
+            }      // No transparency
     }
 }
 
@@ -398,7 +429,10 @@ void drawShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeni
     drawLines(f2, f7, vinfo, finfo, fbp, color);
     drawLines(f3, f6, vinfo, finfo, fbp, color);
 
-
+    drawColor(A.x+1, A.y+1, vinfo, finfo, fbp, color);
+    drawColor(C.x+1, C.y+1, vinfo, finfo, fbp, color);
+    drawColor(f6.x+1, f6.y+1, vinfo, finfo, fbp, color);
+    drawColor(f5.x+1, f5.y+1, vinfo, finfo, fbp, color);
 
 }
 
@@ -436,9 +470,9 @@ void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_f
 
     D.x = offset.x - 14 * WIDTH / 1920;
     D.y = offset.y + 20 * HEIGHT / 1080;
+    E = find_center(D, C, B, A);
     
     if (rotate == 1) {
-        E = find_center(D, C, B, A);
         A = rotate_point(E.x, E.y, -0.523, A);
         B = rotate_point(E.x, E.y, -0.523, B);
         C = rotate_point(E.x, E.y, -0.523, C);
@@ -447,7 +481,6 @@ void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_f
     }
 
     if (rotate == 2) {
-        E = find_center(D, C, B, A);
         A = rotate_point(E.x, E.y, 0.523, A);
         B = rotate_point(E.x, E.y, 0.523, B);
         C = rotate_point(E.x, E.y, 0.523, C);
@@ -469,15 +502,18 @@ void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_f
     drawLines(offset, C, vinfo, finfo, fbp, color);
     drawLines(offset, D, vinfo, finfo, fbp, color);
 
+    drawColor(E.x, E.y, vinfo, finfo, fbp, color);
+    // drawColor(E.x, D.y-1, vinfo, finfo, fbp, color);
+
 }
 
 void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
     struct Point A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T;
     A.x = 900 * WIDTH / 1920;
-    A.y = 1050 * HEIGHT / 1080;
+    A.y = 1049 * HEIGHT / 1080;
 
     B.x = 1020 * WIDTH / 1920;
-    B.y = 1050 * HEIGHT / 1080;
+    B.y = 1049 * HEIGHT / 1080;
 
     C.x = 1020 * WIDTH / 1920;
     C.y = 1020 * HEIGHT / 1080;
@@ -510,10 +546,10 @@ void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, 
     L.y = 1020 * HEIGHT / 1080;
 
     M.x = 935 * WIDTH / 1920;
-    M.y = 1050 * HEIGHT / 1080;
+    M.y = 1049 * HEIGHT / 1080;
 
     N.x = 985 * WIDTH / 1920;
-    N.y = 1050 * HEIGHT / 1080;
+    N.y = 1049 * HEIGHT / 1080;
 
     O.x = 935 * WIDTH / 1920;
     O.y = 1005 * HEIGHT / 1080;
@@ -562,6 +598,12 @@ void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, 
     drawLines(R, S, vinfo, finfo, fbp, color);
     drawLines(S, T, vinfo, finfo, fbp, color);
     drawLines(T, Q, vinfo, finfo, fbp, color);
+
+    // drawLines(C, L, vinfo, finfo, fbp, color);
+
+    drawColor(A.x+1, A.y-1, vinfo, finfo, fbp, color);
+    drawColor(find_center(N,M,P,O).x, find_center(N,M,P,O).y, vinfo, finfo, fbp, color);
+    drawColor(find_center(L,C,A,B).x, find_center(L,C,A,B).y, vinfo, finfo, fbp, color);
 
 }
 
