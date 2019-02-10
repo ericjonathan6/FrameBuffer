@@ -19,8 +19,8 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 1000;
+const int HEIGHT = 750;
 const int WIDTH_MARGIN = 20;
 
 struct Point { 
@@ -441,6 +441,182 @@ void drawShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeni
 
 }
 
+void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp,  int direction) {
+    struct Point A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P;
+    struct Point f1,f2,f3,f4,f5,f6,f7;
+
+    if (direction == 1) {
+        A.x = xoffset;
+        B.x = xoffset + 20 * WIDTH / 1920;
+        C.x = xoffset + 60 * WIDTH / 1920;
+        D.x = xoffset + 50 * WIDTH / 1920;
+        E.x = xoffset + 90 * WIDTH / 1920;    
+        F.x = xoffset + 140 * WIDTH / 1920;
+        G.x = xoffset + 140 * WIDTH / 1920;
+        H.x = xoffset + 180 * WIDTH / 1920;
+        I.x = xoffset + 60 * WIDTH / 1920;
+        J.x = xoffset + 40 * WIDTH / 1920;
+        K.x = xoffset + 60 * WIDTH / 1920;
+        L.x = xoffset + 160 * WIDTH / 1920;
+        M.x = xoffset + 60 * WIDTH / 1920;
+        N.x = xoffset + 120 * WIDTH / 1920;
+        O.x = xoffset + 160 * WIDTH / 1920;
+        P.x = xoffset + 100 * WIDTH / 1920;
+
+        A.y = yoffset;
+        B.y =  yoffset - 20 * HEIGHT / 1080;
+        C.y =  yoffset - 36 * HEIGHT / 1080;
+        D.y =  yoffset - 30 * HEIGHT / 1080;
+        E.y =  yoffset - 30 * HEIGHT / 1080;
+        F.y =  yoffset - 50 * HEIGHT / 1080;
+        G.y =  yoffset - 60 * HEIGHT / 1080;
+        H.y =  yoffset - 60 * HEIGHT / 1080;
+        I.y =  yoffset - 12 * HEIGHT / 1080;
+        J.y =  yoffset + 20 * HEIGHT / 1080;
+        K.y =  yoffset + 16 * HEIGHT / 1080;
+        L.y =  yoffset - 24 * HEIGHT / 1080;
+        M.y =  yoffset - 60 * HEIGHT / 1080;
+        N.y =  yoffset - 84 * HEIGHT / 1080;
+        O.y =  yoffset - 84 * HEIGHT / 1080;
+        P.y =  yoffset - 60 * HEIGHT / 1080;
+    } else {
+        A.x = xoffset;
+        B.x = xoffset + 20 * WIDTH / 1920;
+        C.x = xoffset + 60 * WIDTH / 1920;
+        D.x = xoffset + 50 * WIDTH / 1920;
+        E.x = xoffset + 90 * WIDTH / 1920;    
+        F.x = xoffset + 140 * WIDTH / 1920;
+        G.x = xoffset + 140 * WIDTH / 1920;
+        H.x = xoffset + 180 * WIDTH / 1920;
+        I.x = xoffset + 60 * WIDTH / 1920;
+        J.x = xoffset + 40 * WIDTH / 1920;
+        K.x = xoffset + 60 * WIDTH / 1920;
+        L.x = xoffset + 160 * WIDTH / 1920;
+        M.x = xoffset + 60 * WIDTH / 1920;
+        N.x = xoffset + 120 * WIDTH / 1920;
+        O.x = xoffset + 160 * WIDTH / 1920;
+        P.x = xoffset + 100 * WIDTH / 1920;
+    
+        A.y = yoffset;
+        B.y =  yoffset - 20 * HEIGHT / 1080;
+        C.y =  yoffset - 36 * HEIGHT / 1080;
+        D.y =  yoffset - 30 * HEIGHT / 1080;
+        E.y =  yoffset - 30 * HEIGHT / 1080;
+        F.y =  yoffset - 50 * HEIGHT / 1080;
+        G.y =  yoffset - 60 * HEIGHT / 1080;
+        H.y =  yoffset - 60 * HEIGHT / 1080;
+        I.y =  yoffset - 12 * HEIGHT / 1080;
+        J.y =  yoffset + 20 * HEIGHT / 1080;
+        K.y =  yoffset + 16 * HEIGHT / 1080;
+        L.y =  yoffset - 24 * HEIGHT / 1080;
+        M.y =  yoffset - 60 * HEIGHT / 1080;
+        N.y =  yoffset - 84 * HEIGHT / 1080;
+        O.y =  yoffset - 84 * HEIGHT / 1080;
+        P.y =  yoffset - 60 * HEIGHT / 1080;
+    }
+
+
+    struct Point awal, akhir;
+    awal.x = 960 * WIDTH / 1920;
+    awal.y = 870 * HEIGHT / 1080;
+
+    akhir.x = 960 * WIDTH / 1920;
+    akhir.y = 251 * HEIGHT / 1080;
+
+    struct Color color;
+    color.red = 255;
+    color.green = 255;
+    color.blue = 255;
+    color.opacity = 0;
+
+    drawLines(A, B, vinfo, finfo, fbp, color);
+    drawLines(A, J, vinfo, finfo, fbp, color);
+    drawLines(A, I, vinfo, finfo, fbp, color);
+    
+    drawLines(B, C, vinfo, finfo, fbp, color);
+    
+    drawLines(C, D, vinfo, finfo, fbp, color);
+    drawLines(C, M, vinfo, finfo, fbp, color);
+    
+    drawLines(D, E, vinfo, finfo, fbp, color);
+
+    drawLines(E, F, vinfo, finfo, fbp, color);
+    drawLines(E, P, vinfo, finfo, fbp, color);
+    
+    drawLines(F, G, vinfo, finfo, fbp, color);
+    
+    drawLines(G, H, vinfo, finfo, fbp, color);
+    drawLines(G, O, vinfo, finfo, fbp, color);
+    
+    drawLines(H, L, vinfo, finfo, fbp, color);
+    drawLines(H, I, vinfo, finfo, fbp, color);
+
+    drawLines(I, K, vinfo, finfo, fbp, color);
+    
+    drawLines(J, K, vinfo, finfo, fbp, color);
+
+    drawLines(K, L, vinfo, finfo, fbp, color);
+
+    drawLines(M, N, vinfo, finfo, fbp, color);
+    drawLines(M, P, vinfo, finfo, fbp, color);
+
+    drawLines(N, O, vinfo, finfo, fbp, color);
+
+    drawLines(O, P, vinfo, finfo, fbp, color);
+
+    color.red = 244;
+    color.green = 185;
+    color.blue = 66;
+
+    drawColor(A.x+3, A.y-3, vinfo, finfo, fbp, color);
+
+    color.red = 198;
+    color.green = 195;
+    color.blue = 188;
+
+    drawColor(E.x-3, E.y-3, vinfo, finfo, fbp, color);
+
+    color.red = 148;
+    color.green = 239;
+    color.blue = 227;
+
+    drawColor(P.x+3, P.y-3, vinfo, finfo, fbp, color);
+    
+    color.red = 44;
+    color.green = 82;
+    color.blue = 142;
+    drawColor(E.x+3, E.y-3, vinfo, finfo, fbp, color);
+
+    color.red = 65;
+    color.green = 31;
+    color.blue = 124;
+
+    drawColor(A.x+6, A.y+3, vinfo, finfo, fbp, color);
+
+    color.red = 217;
+    color.green = 237;
+    color.blue = 4;
+    drawColor(L.x-3, L.y-3, vinfo, finfo, fbp, color);
+
+
+    // drawLines(f1, f4, vinfo, finfo, fbp, color);
+    // drawLines(f4, f5, vinfo, finfo, fbp, color);
+    // drawLines(f5, f7, vinfo, finfo, fbp, color);
+    // drawLines(f2, f7, vinfo, finfo, fbp, color);
+    // drawLines(f3, f6, vinfo, finfo, fbp, color);
+
+    // drawColor(A.x+1, A.y+1, vinfo, finfo, fbp, color);
+    // drawColor(C.x+1, C.y+1, vinfo, finfo, fbp, color);
+    // if (direction == 1) {
+    //     drawColor(f6.x+1, f6.y+1, vinfo, finfo, fbp, color);
+    //     drawColor(f5.x+1, f5.y+1, vinfo, finfo, fbp, color);
+    // } else {
+    //     drawColor(f5.x-1, f5.y+1, vinfo, finfo, fbp, color);
+    //     drawColor(f6.x-1, f6.y+1, vinfo, finfo, fbp, color);
+    // }
+
+}
+
 void clearShip(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
     int y = 0;
     long int location = 0;
@@ -514,7 +690,6 @@ void drawBullet(struct Point offset, struct fb_var_screeninfo vinfo, struct fb_f
 
     drawColor(E.x, E.y, vinfo, finfo, fbp, color);
     drawColor(U.x, U.y, vinfo, finfo, fbp, color);
-
 }
 
 void drawCannon(struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp) {
@@ -716,10 +891,37 @@ int main(void)
     nodelay(stdscr, TRUE);
     scrollok(stdscr, TRUE);
    
-    int xoffset = 30 * WIDTH / 1920;
-   
+    int xoffset = WIDTH - 200 * WIDTH / 1920;
+    int yoffset = 200 * HEIGHT / 1080;
+
+    struct Color color;
+    color.red = 255;
+    color.blue = 255;
+    color.green = 255;
+    color.opacity = 0;
+
+    struct Point A,B,C,D;
+    
+    A.x = 10;
+    A.y = 10;
+
+    B.x = WIDTH;
+    B.y = 10;
+
+    C.x = 10;
+    C.y = HEIGHT;
+
+    D.x = WIDTH;
+    D.y = HEIGHT;
+
+
     while(1) {        
+        drawLines(A, B, vinfo, finfo, fbp, color);
+        drawLines(B, D, vinfo, finfo, fbp, color);
+        drawLines(C, D, vinfo, finfo, fbp, color);
+        drawLines(C, A, vinfo, finfo, fbp, color);
         drawCannon(vinfo, finfo, fbp);
+
 
         if(
             offset.y <= 251 * HEIGHT / 1080 && 
@@ -733,7 +935,7 @@ int main(void)
             endwin();
             return 0;
         } else {
-            drawShip(xoffset, vinfo, finfo, fbp, direction);
+            drawShip3D(xoffset, yoffset, vinfo, finfo, fbp, direction);
         }
          if (kbhit()) {
             int n = getch();
@@ -764,17 +966,19 @@ int main(void)
         clearShip(vinfo, finfo, fbp);
         clearShot(vinfo, finfo, fbp);
         if(direction) {
-            xoffset += 5 * WIDTH / 1920;
+            xoffset -= 10 * WIDTH / 1920;
+            yoffset += 5 * WIDTH / 1920;
         } else {
-            xoffset -= 5 * WIDTH / 1920;
+            xoffset += 10 * WIDTH / 1920;
+            yoffset -= 5 * WIDTH / 1920;
         }
 
         if(xoffset < 30 * WIDTH / 1920) {
-            direction = 1;
+            direction = 0;
         }
 
-        if(xoffset > 1760 * WIDTH / 1920) {
-            direction = 0;
+        if(xoffset  > 1680 * WIDTH / 1920) {
+            direction = 1;
         }
 
         if((offset.y < 1) || (offset.x < 1)) {
