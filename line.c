@@ -19,8 +19,8 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 
-const int WIDTH = 1000;
-const int HEIGHT = 750;
+const int WIDTH = 800;
+const int HEIGHT = 600;
 const int WIDTH_MARGIN = 20;
 
 struct Point { 
@@ -479,40 +479,190 @@ void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct 
         N.y =  yoffset - 84 * HEIGHT / 1080;
         O.y =  yoffset - 84 * HEIGHT / 1080;
         P.y =  yoffset - 60 * HEIGHT / 1080;
+
+        struct Color color;
+        color.red = 255;
+        color.green = 255;
+        color.blue = 255;
+        color.opacity = 0;
+
+        drawLines(A, B, vinfo, finfo, fbp, color);
+        drawLines(A, J, vinfo, finfo, fbp, color);
+        drawLines(A, I, vinfo, finfo, fbp, color);
+        
+        drawLines(B, C, vinfo, finfo, fbp, color);
+        
+        drawLines(C, D, vinfo, finfo, fbp, color);
+        drawLines(C, M, vinfo, finfo, fbp, color);
+        
+        drawLines(D, E, vinfo, finfo, fbp, color);
+
+        drawLines(E, F, vinfo, finfo, fbp, color);
+        drawLines(E, P, vinfo, finfo, fbp, color);
+        
+        drawLines(F, G, vinfo, finfo, fbp, color);
+        
+        drawLines(G, H, vinfo, finfo, fbp, color);
+        drawLines(G, O, vinfo, finfo, fbp, color);
+        
+        drawLines(H, L, vinfo, finfo, fbp, color);
+        drawLines(H, I, vinfo, finfo, fbp, color);
+
+        drawLines(I, K, vinfo, finfo, fbp, color);
+        
+        drawLines(J, K, vinfo, finfo, fbp, color);
+
+        drawLines(K, L, vinfo, finfo, fbp, color);
+
+        drawLines(M, N, vinfo, finfo, fbp, color);
+        drawLines(M, P, vinfo, finfo, fbp, color);
+
+        drawLines(N, O, vinfo, finfo, fbp, color);
+
+        drawLines(O, P, vinfo, finfo, fbp, color);
+        color.red = 244;
+        color.green = 185;
+        color.blue = 66;
+
+        drawColor(A.x+3, A.y-3, vinfo, finfo, fbp, color);
+
+        color.red = 198;
+        color.green = 195;
+        color.blue = 188;
+
+        drawColor(E.x-3, E.y-3, vinfo, finfo, fbp, color);
+
+        color.red = 148;
+        color.green = 239;
+        color.blue = 227;
+
+        drawColor(P.x+3, P.y-3, vinfo, finfo, fbp, color);
+        
+        color.red = 44;
+        color.green = 82;
+        color.blue = 142;
+        drawColor(E.x+3, E.y-3, vinfo, finfo, fbp, color);
+
+        color.red = 65;
+        color.green = 31;
+        color.blue = 124;
+
+        drawColor(A.x+6, A.y+3, vinfo, finfo, fbp, color);
+
+        color.red = 217;
+        color.green = 237;
+        color.blue = 4;
+        drawColor(L.x-3, L.y-3, vinfo, finfo, fbp, color);
+
     } else {
         A.x = xoffset;
-        B.x = xoffset + 20 * WIDTH / 1920;
-        C.x = xoffset + 60 * WIDTH / 1920;
-        D.x = xoffset + 50 * WIDTH / 1920;
-        E.x = xoffset + 90 * WIDTH / 1920;    
-        F.x = xoffset + 140 * WIDTH / 1920;
-        G.x = xoffset + 140 * WIDTH / 1920;
-        H.x = xoffset + 180 * WIDTH / 1920;
-        I.x = xoffset + 60 * WIDTH / 1920;
-        J.x = xoffset + 40 * WIDTH / 1920;
-        K.x = xoffset + 60 * WIDTH / 1920;
-        L.x = xoffset + 160 * WIDTH / 1920;
-        M.x = xoffset + 60 * WIDTH / 1920;
-        N.x = xoffset + 120 * WIDTH / 1920;
-        O.x = xoffset + 160 * WIDTH / 1920;
-        P.x = xoffset + 100 * WIDTH / 1920;
+        B.x = xoffset + 35 * 2 * WIDTH / 1920;
+        C.x = xoffset;
+        D.x = xoffset + 35 * 2* WIDTH / 1920;
+        E.x = xoffset + 15 * 2* WIDTH / 1920;    
+        F.x = xoffset + 35 * 2* WIDTH / 1920;
+        G.x = xoffset + 15 * 2* WIDTH / 1920;
+        H.x = xoffset + 35 * 2* WIDTH / 1920;
+        I.x = xoffset + 35 * 2* WIDTH / 1920;
+        J.x = xoffset + 55 * 2* WIDTH / 1920;
+        K.x = xoffset + 55 * 2* WIDTH / 1920;
+        L.x = xoffset + 55 * 2* WIDTH / 1920;        
+        M.x = xoffset + 75 * 2* WIDTH / 1920;
+        N.x = xoffset + 75 * 2* WIDTH / 1920;
+        O.x = xoffset + 80 * 2* WIDTH / 1920;
     
         A.y = yoffset;
-        B.y =  yoffset - 20 * HEIGHT / 1080;
-        C.y =  yoffset - 36 * HEIGHT / 1080;
-        D.y =  yoffset - 30 * HEIGHT / 1080;
-        E.y =  yoffset - 30 * HEIGHT / 1080;
-        F.y =  yoffset - 50 * HEIGHT / 1080;
-        G.y =  yoffset - 60 * HEIGHT / 1080;
-        H.y =  yoffset - 60 * HEIGHT / 1080;
-        I.y =  yoffset - 12 * HEIGHT / 1080;
-        J.y =  yoffset + 20 * HEIGHT / 1080;
-        K.y =  yoffset + 16 * HEIGHT / 1080;
-        L.y =  yoffset - 24 * HEIGHT / 1080;
-        M.y =  yoffset - 60 * HEIGHT / 1080;
-        N.y =  yoffset - 84 * HEIGHT / 1080;
-        O.y =  yoffset - 84 * HEIGHT / 1080;
-        P.y =  yoffset - 60 * HEIGHT / 1080;
+        B.y =  yoffset;
+        C.y =  yoffset + 15 * 2* HEIGHT / 1080;
+        D.y =  yoffset + 15 * 2* HEIGHT / 1080;
+        E.y =  yoffset - 10 * 2* HEIGHT / 1080;
+        F.y =  yoffset - 10 * 2* HEIGHT / 1080;
+        G.y =  yoffset - 25 * 2* HEIGHT / 1080;
+        H.y =  yoffset - 25 * 2* HEIGHT / 1080;
+        I.y =  yoffset - 35 * 2* HEIGHT / 1080;
+        J.y =  yoffset - 35 * 2* HEIGHT / 1080;
+        K.y =  yoffset - 20 * 2* HEIGHT / 1080;
+        L.y =  yoffset - 30 * 2* HEIGHT / 1080;
+        M.y =  yoffset - 10;
+        N.y =  yoffset - 25 * 2* HEIGHT / 1080;
+        O.y =  yoffset - 40 * 2* HEIGHT / 1080;
+
+        struct Color color;
+        color.red = 255;
+        color.green = 255;
+        color.blue = 255;
+        color.opacity = 0;
+
+        drawLines(A, B, vinfo, finfo, fbp, color);
+        drawLines(A, C, vinfo, finfo, fbp, color);
+
+        drawLines(C, D, vinfo, finfo, fbp, color);
+        drawLines(B, D, vinfo, finfo, fbp, color);
+        drawLines(A, E, vinfo, finfo, fbp, color);
+
+        drawLines(E, F, vinfo, finfo, fbp, color);
+        drawLines(G, H, vinfo, finfo, fbp, color);
+        
+        drawLines(E, G, vinfo, finfo, fbp, color);
+        drawLines(F, H, vinfo, finfo, fbp, color);
+        drawLines(G, I, vinfo, finfo, fbp, color);
+        drawLines(H, J, vinfo, finfo, fbp, color);
+        drawLines(I, J, vinfo, finfo, fbp, color);
+
+        drawLines(F, K, vinfo, finfo, fbp, color);
+        drawLines(J, K, vinfo, finfo, fbp, color);
+        // drawLines(J, L, vinfo, finfo, fbp, color);
+        // drawLines(K, L, vinfo, finfo, fbp, color);
+
+        drawLines(D, M, vinfo, finfo, fbp, color);
+        drawLines(M, N, vinfo, finfo, fbp, color);
+        drawLines(B, N, vinfo, finfo, fbp, color);
+
+        drawLines(N, O, vinfo, finfo, fbp, color);
+        drawLines(M, O, vinfo, finfo, fbp, color);
+        drawLines(L, O, vinfo, finfo, fbp, color);
+
+        color.red = 244;
+        color.green = 185;
+        color.blue = 66;
+
+        drawColor(A.x+3, A.y+3, vinfo, finfo, fbp, color);
+
+        color.red = 44;
+        color.green = 82;
+        color.blue = 142;
+
+        drawColor(A.x+3, A.y-2, vinfo, finfo, fbp, color);
+
+        color.red = 148;
+        color.green = 239;
+        color.blue = 227;
+
+        drawColor(E.x+3, E.y-2, vinfo, finfo, fbp, color);
+
+        color.red = 255;
+        color.green = 25;
+        color.blue = 60;
+
+        drawColor(H.x-2, G.y-2, vinfo, finfo, fbp, color);
+
+        color.red = 65;
+        color.green = 31;
+        color.blue = 124;
+
+        drawColor(F.x+2, F.y-2, vinfo, finfo, fbp, color);
+
+        color.red = 217;
+        color.green = 237;
+        color.blue = 4;
+        drawColor(B.x+3, B.y+3, vinfo, finfo, fbp, color);
+
+        color.red = 9;
+        color.green = 50;
+        color.blue = 200;
+        drawColor(B.x+3, B.y+3, vinfo, finfo, fbp, color);
+
+
     }
 
 
@@ -522,81 +672,6 @@ void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct 
 
     akhir.x = 960 * WIDTH / 1920;
     akhir.y = 251 * HEIGHT / 1080;
-
-    struct Color color;
-    color.red = 255;
-    color.green = 255;
-    color.blue = 255;
-    color.opacity = 0;
-
-    drawLines(A, B, vinfo, finfo, fbp, color);
-    drawLines(A, J, vinfo, finfo, fbp, color);
-    drawLines(A, I, vinfo, finfo, fbp, color);
-    
-    drawLines(B, C, vinfo, finfo, fbp, color);
-    
-    drawLines(C, D, vinfo, finfo, fbp, color);
-    drawLines(C, M, vinfo, finfo, fbp, color);
-    
-    drawLines(D, E, vinfo, finfo, fbp, color);
-
-    drawLines(E, F, vinfo, finfo, fbp, color);
-    drawLines(E, P, vinfo, finfo, fbp, color);
-    
-    drawLines(F, G, vinfo, finfo, fbp, color);
-    
-    drawLines(G, H, vinfo, finfo, fbp, color);
-    drawLines(G, O, vinfo, finfo, fbp, color);
-    
-    drawLines(H, L, vinfo, finfo, fbp, color);
-    drawLines(H, I, vinfo, finfo, fbp, color);
-
-    drawLines(I, K, vinfo, finfo, fbp, color);
-    
-    drawLines(J, K, vinfo, finfo, fbp, color);
-
-    drawLines(K, L, vinfo, finfo, fbp, color);
-
-    drawLines(M, N, vinfo, finfo, fbp, color);
-    drawLines(M, P, vinfo, finfo, fbp, color);
-
-    drawLines(N, O, vinfo, finfo, fbp, color);
-
-    drawLines(O, P, vinfo, finfo, fbp, color);
-
-    color.red = 244;
-    color.green = 185;
-    color.blue = 66;
-
-    drawColor(A.x+3, A.y-3, vinfo, finfo, fbp, color);
-
-    color.red = 198;
-    color.green = 195;
-    color.blue = 188;
-
-    drawColor(E.x-3, E.y-3, vinfo, finfo, fbp, color);
-
-    color.red = 148;
-    color.green = 239;
-    color.blue = 227;
-
-    drawColor(P.x+3, P.y-3, vinfo, finfo, fbp, color);
-    
-    color.red = 44;
-    color.green = 82;
-    color.blue = 142;
-    drawColor(E.x+3, E.y-3, vinfo, finfo, fbp, color);
-
-    color.red = 65;
-    color.green = 31;
-    color.blue = 124;
-
-    drawColor(A.x+6, A.y+3, vinfo, finfo, fbp, color);
-
-    color.red = 217;
-    color.green = 237;
-    color.blue = 4;
-    drawColor(L.x-3, L.y-3, vinfo, finfo, fbp, color);
 
 
     // drawLines(f1, f4, vinfo, finfo, fbp, color);
@@ -924,8 +999,8 @@ int main(void)
 
 
         if(
-            offset.y <= 251 * HEIGHT / 1080 && 
-            (xoffset + 20*WIDTH / 1920 <= offset.x && xoffset + 100 * WIDTH / 1920 >= offset.x)
+            offset.y <= yoffset + 40*HEIGHT/1920 && offset.y >= yoffset-40*HEIGHT/1920 &&
+            (xoffset *WIDTH / 1920 <= offset.x && xoffset + 120 * WIDTH / 1920 >= offset.x)
         ) {
             drawBullet(offset, vinfo, finfo, fbp, 0);
             clearShot(vinfo, finfo, fbp);
