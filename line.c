@@ -23,6 +23,8 @@ const int WIDTH = 800;
 const int HEIGHT = 600;
 const int WIDTH_MARGIN = 20;
 
+#define PI 3.14159265
+
 struct Point { 
    int x, y; 
 };
@@ -353,6 +355,7 @@ void destroyShip(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct
 
 void drawShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp,  int direction) {
     struct Point A, B, C, D, E, F, G, H;
+    struct Point rotor1,rotor2;
     struct Point f1,f2,f3,f4,f5,f6,f7;
 
     if (direction == 1) {
@@ -447,8 +450,9 @@ void drawShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeni
 
 }
 
-void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp,  int direction) {
+void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp,  int direction, int degree) {
     struct Point A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P;
+    struct Point rotor1,rotor2;
     struct Point f1,f2,f3,f4,f5,f6,f7;
 
     if (direction == 1) {
@@ -468,6 +472,8 @@ void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct 
         N.x = xoffset + 120 * WIDTH / 1920;
         O.x = xoffset + 160 * WIDTH / 1920;
         P.x = xoffset + 100 * WIDTH / 1920;
+        rotor1.x = xoffset + 175 * WIDTH / 1920;
+        rotor2.x = xoffset + 195 * WIDTH / 1920;
 
         A.y = yoffset;
         B.y =  yoffset - 20 * HEIGHT / 1080;
@@ -485,6 +491,28 @@ void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct 
         N.y =  yoffset - 84 * HEIGHT / 1080;
         O.y =  yoffset - 84 * HEIGHT / 1080;
         P.y =  yoffset - 60 * HEIGHT / 1080;
+        rotor1.y = yoffset - 80 * HEIGHT / 1080;
+        rotor2.y = yoffset - 40 * HEIGHT / 1080;
+
+        struct Point center;
+        center.x = rotor1.x;
+        center.y = rotor1.y;
+
+        rotor1.x = rotor1.x - center.x;
+        rotor1.y = rotor1.y - center.y;
+        rotor2.x = rotor2.x - center.x;
+        rotor2.y = rotor2.y - center.y;
+
+        degree = degree % 360;
+        rotor1.x = (rotor1.x * cos(degree*PI/180)) - (rotor1.y * sin(degree*PI/180));
+        rotor1.y = (rotor1.x * sin(degree*PI/180)) + (rotor1.y * cos(degree*PI/180));
+        rotor2.x = (rotor2.x * cos(degree*PI/180)) - (rotor2.y * sin(degree*PI/180));
+        rotor2.y = (rotor2.x * sin(degree*PI/180)) + (rotor2.y * cos(degree*PI/180));
+
+        rotor1.x = rotor1.x + center.x;
+        rotor1.y = rotor1.y + center.y;
+        rotor2.x = rotor2.x + center.x;
+        rotor2.y = rotor2.y + center.y;
 
         struct Color color;
         color.red = 255;
@@ -526,6 +554,8 @@ void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct 
         drawLines(N, O, vinfo, finfo, fbp, color);
 
         drawLines(O, P, vinfo, finfo, fbp, color);
+
+        drawLines(rotor1,rotor2,vinfo,finfo, fbp,color);
         color.red = 244;
         color.green = 185;
         color.blue = 66;
@@ -943,6 +973,7 @@ int main(void)
     struct Point offset;
     offset.x = 960 * WIDTH / 1920;
     offset.y = 885 * HEIGHT / 1080;
+    int degree = 0;
 
     x = 0; y = 0;       // Where we are going to put the pixel
 
@@ -1018,7 +1049,7 @@ int main(void)
             endwin();
             return 0;
         } else {
-            drawShip3D(xoffset, yoffset, vinfo, finfo, fbp, direction);
+            drawShip3D(xoffset, yoffset, vinfo, finfo, fbp, direction, degree);
         }
          if (kbhit()) {
             int n = getch();
@@ -1069,6 +1100,7 @@ int main(void)
             offset.x = 960 * WIDTH / 1920;
             shot = 0;
         }
+        degree += 10;
     }
 
     munmap(fbp, screensize);
