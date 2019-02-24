@@ -444,9 +444,9 @@ void drawShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeni
 
 }
 
-void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp,  int direction, int degree) {
+void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp,  int direction, int degree1, int degree2) {
     struct Point A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P;
-    struct Point rotor1,rotor2;
+    struct Point rotor1, rotor2, rotor3, rotor4;
     struct Point f1,f2,f3,f4,f5,f6,f7;
 
     if (direction == 1) {
@@ -488,25 +488,55 @@ void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct 
         rotor1.y = yoffset - 80 * HEIGHT / 1080;
         rotor2.y = yoffset - 40 * HEIGHT / 1080;
 
-        struct Point center;
+        rotor3.x = rotor1.x; rotor3.y = rotor2.y;
+        rotor4.x = rotor2.x; rotor4.y = rotor1.y;        
+
+        struct Point center, diff;
         center.x = rotor1.x;
         center.y = rotor1.y;
+        diff.x = (rotor1.x - rotor2.x)/2;
+        diff.y = (rotor1.y - rotor2.y)/2;
 
-        rotor1.x = rotor1.x - center.x;
-        rotor1.y = rotor1.y - center.y;
-        rotor2.x = rotor2.x - center.x;
-        rotor2.y = rotor2.y - center.y;
+        rotor1.x = rotor1.x - (center.x - diff.x);
+        rotor1.y = rotor1.y - (center.y - diff.y);
+        rotor2.x = rotor2.x - (center.x - diff.x);
+        rotor2.y = rotor2.y - (center.y - diff.y);
 
-        degree = degree % 360;
-        rotor1.x = (rotor1.x * cos(degree*PI/180)) - (rotor1.y * sin(degree*PI/180));
-        rotor1.y = (rotor1.x * sin(degree*PI/180)) + (rotor1.y * cos(degree*PI/180));
-        rotor2.x = (rotor2.x * cos(degree*PI/180)) - (rotor2.y * sin(degree*PI/180));
-        rotor2.y = (rotor2.x * sin(degree*PI/180)) + (rotor2.y * cos(degree*PI/180));
+        degree1 = degree1 % 360;
+        // degree2 = degree2 % 360;
 
-        rotor1.x = rotor1.x + center.x;
-        rotor1.y = rotor1.y + center.y;
-        rotor2.x = rotor2.x + center.x;
-        rotor2.y = rotor2.y + center.y;
+        rotor1.x = (rotor1.x * cos(degree1*PI/180)) - (rotor1.y * sin(degree1*PI/180));
+        rotor1.y = (rotor1.x * sin(degree1*PI/180)) + (rotor1.y * cos(degree1*PI/180));
+        rotor2.x = (rotor2.x * cos(degree1*PI/180)) - (rotor2.y * sin(degree1*PI/180));
+        rotor2.y = (rotor2.x * sin(degree1*PI/180)) + (rotor2.y * cos(degree1*PI/180));
+
+        rotor1.x = rotor1.x + (center.x - diff.x);
+        rotor1.y = rotor1.y + (center.y - diff.y);
+        rotor2.x = rotor2.x + (center.x - diff.x);
+        rotor2.y = rotor2.y + (center.y - diff.y);
+
+        //Second rotor
+
+        center.x = rotor3.x;
+        center.y = rotor3.y;
+        diff.x = (rotor3.x - rotor4.x)/2;
+        diff.y = (rotor3.y - rotor4.y)/2;
+
+        rotor3.x = rotor3.x - (center.x - diff.x);
+        rotor3.y = rotor3.y - (center.y - diff.y);
+        rotor4.x = rotor4.x - (center.x - diff.x);
+        rotor4.y = rotor4.y - (center.y - diff.y);
+
+        degree2 = degree2 % 360;
+        rotor3.x = (rotor3.x * cos(degree2*PI/180)) - (rotor3.y * sin(degree2*PI/180));
+        rotor3.y = (rotor3.x * sin(degree2*PI/180)) + (rotor3.y * cos(degree2*PI/180));
+        rotor4.x = (rotor4.x * cos(degree2*PI/180)) - (rotor4.y * sin(degree2*PI/180));
+        rotor4.y = (rotor4.x * sin(degree2*PI/180)) + (rotor4.y * cos(degree2*PI/180));
+
+        rotor3.x = rotor3.x + (center.x - diff.x);
+        rotor3.y = rotor3.y + (center.y - diff.y);
+        rotor4.x = rotor4.x + (center.x - diff.x);
+        rotor4.y = rotor4.y + (center.y - diff.y);
 
         struct Color color;
         color.red = 255;
@@ -549,18 +579,20 @@ void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct 
 
         drawLines(O, P, vinfo, finfo, fbp, color);
 
-        drawLines(rotor1,rotor2,vinfo,finfo, fbp,color);
+        
         color.red = 244;
         color.green = 185;
         color.blue = 66;
 
         drawColor(A.x+3, A.y-3, vinfo, finfo, fbp, color);
+        drawLines(rotor1,rotor2,vinfo,finfo, fbp,color);
 
         color.red = 198;
         color.green = 195;
         color.blue = 188;
 
         drawColor(E.x-3, E.y-3, vinfo, finfo, fbp, color);
+        drawLines(rotor3,rotor4,vinfo,finfo, fbp,color);
 
         color.red = 148;
         color.green = 239;
@@ -600,6 +632,10 @@ void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct 
         M.x = xoffset + 75 * 2* WIDTH / 1920;
         N.x = xoffset + 75 * 2* WIDTH / 1920;
         O.x = xoffset + 80 * 2* WIDTH / 1920;
+
+        rotor1.x = xoffset - 15 * WIDTH / 1920;
+        rotor2.x = xoffset + 40 * WIDTH / 1920;
+
     
         A.y = yoffset;
         B.y =  yoffset;
@@ -616,6 +652,59 @@ void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct 
         M.y =  yoffset - 10;
         N.y =  yoffset - 25 * 2* HEIGHT / 1080;
         O.y =  yoffset - 40 * 2* HEIGHT / 1080;
+        rotor1.y = yoffset - 15 * HEIGHT / 1080;
+        rotor2.y = yoffset - 50 * HEIGHT / 1080;
+
+        rotor3.x = rotor1.x; rotor3.y = rotor2.y;
+        rotor4.x = rotor2.x; rotor4.y = rotor1.y;   
+
+
+        struct Point center, diff;
+        center.x = rotor1.x;
+        center.y = rotor1.y;
+        diff.x = (rotor1.x - rotor2.x)/2;
+        diff.y = (rotor1.y - rotor2.y)/2;
+
+        rotor1.x = rotor1.x - (center.x - diff.x);
+        rotor1.y = rotor1.y - (center.y - diff.y);
+        rotor2.x = rotor2.x - (center.x - diff.x);
+        rotor2.y = rotor2.y - (center.y - diff.y);
+
+        degree1 = degree1 % 360;
+        // degree2 = degree2 % 360;
+
+        rotor1.x = (rotor1.x * cos(degree1*PI/180)) - (rotor1.y * sin(degree1*PI/180));
+        rotor1.y = (rotor1.x * sin(degree1*PI/180)) + (rotor1.y * cos(degree1*PI/180));
+        rotor2.x = (rotor2.x * cos(degree1*PI/180)) - (rotor2.y * sin(degree1*PI/180));
+        rotor2.y = (rotor2.x * sin(degree1*PI/180)) + (rotor2.y * cos(degree1*PI/180));
+
+        rotor1.x = rotor1.x + (center.x - diff.x);
+        rotor1.y = rotor1.y + (center.y - diff.y);
+        rotor2.x = rotor2.x + (center.x - diff.x);
+        rotor2.y = rotor2.y + (center.y - diff.y);
+
+        //Second rotor
+
+        center.x = rotor3.x;
+        center.y = rotor3.y;
+        diff.x = (rotor3.x - rotor4.x)/2;
+        diff.y = (rotor3.y - rotor4.y)/2;
+
+        rotor3.x = rotor3.x - (center.x - diff.x);
+        rotor3.y = rotor3.y - (center.y - diff.y);
+        rotor4.x = rotor4.x - (center.x - diff.x);
+        rotor4.y = rotor4.y - (center.y - diff.y);
+
+        degree2 = degree2 % 360;
+        rotor3.x = (rotor3.x * cos(degree2*PI/180)) - (rotor3.y * sin(degree2*PI/180));
+        rotor3.y = (rotor3.x * sin(degree2*PI/180)) + (rotor3.y * cos(degree2*PI/180));
+        rotor4.x = (rotor4.x * cos(degree2*PI/180)) - (rotor4.y * sin(degree2*PI/180));
+        rotor4.y = (rotor4.x * sin(degree2*PI/180)) + (rotor4.y * cos(degree2*PI/180));
+
+        rotor3.x = rotor3.x + (center.x - diff.x);
+        rotor3.y = rotor3.y + (center.y - diff.y);
+        rotor4.x = rotor4.x + (center.x - diff.x);
+        rotor4.y = rotor4.y + (center.y - diff.y);
 
         struct Color color;
         color.red = 255;
@@ -657,12 +746,14 @@ void drawShip3D(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct 
         color.blue = 66;
 
         drawColor(A.x+3, A.y+3, vinfo, finfo, fbp, color);
+        drawLines(rotor1,rotor2,vinfo,finfo, fbp,color);
 
         color.red = 44;
         color.green = 82;
         color.blue = 142;
 
         drawColor(A.x+3, A.y-2, vinfo, finfo, fbp, color);
+        drawLines(rotor3,rotor4,vinfo,finfo, fbp,color);
 
         color.red = 148;
         color.green = 239;
@@ -967,7 +1058,8 @@ int main(void)
     struct Point offset;
     offset.x = 960 * WIDTH / 1920;
     offset.y = 885 * HEIGHT / 1080;
-    int degree = 0;
+    int degree1 = 0;
+    int degree2 = 90;
 
     x = 0; y = 0;       // Where we are going to put the pixel
 
@@ -1041,7 +1133,7 @@ int main(void)
             endwin();
             return 0;
         } else {
-            drawShip3D(xoffset, yoffset, vinfo, finfo, fbp, direction, degree);
+            drawShip3D(xoffset, yoffset, vinfo, finfo, fbp, direction, degree1, degree2);
         }
          if (kbhit()) {
             int n = getch();
@@ -1092,7 +1184,8 @@ int main(void)
             offset.x = 960 * WIDTH / 1920;
             shot = 0;
         }
-        degree += 10;
+        degree2 += 33;
+        degree1 += 33;
     }
 
     munmap(fbp, screensize);
