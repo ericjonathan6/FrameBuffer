@@ -302,16 +302,16 @@ int main(void)
     local[2].y = 643;
 
     // Left View
-    global[0].x = 185;
+    global[0].x = 175; //185
     global[0].y = 107;
 
-    global[1].x = 557;
+    global[1].x = 567; //557
     global[1].y = 107;
 
-    global[3].x = 185;
+    global[3].x = 175;
     global[3].y = 643;
 
-    global[2].x = 557;
+    global[2].x = 567;
     global[2].y = 643;
 
     double scale = 0.25;
