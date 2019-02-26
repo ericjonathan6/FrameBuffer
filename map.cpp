@@ -21,8 +21,8 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 #include <bits/stdc++.h>
 using namespace std;
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 1300;
+const int HEIGHT = 755;
 const int WIDTH_MARGIN = 20;
 
 #define PI 3.14159265
@@ -50,7 +50,12 @@ void draw_color(int x, int y, struct fb_var_screeninfo vinfo, struct fb_fix_scre
     // *fbp = color.blue;
     long int location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
                         (y+vinfo.yoffset) * finfo.line_length;
-
+    // if (vinfo.bits_per_pixel == 32) {
+    //     *(fbp + location) = color.blue;        // Some blue
+    //     *(fbp + location + 1) = color.green;     // A little green
+    //     *(fbp + location + 2) = color.red;    // A lot of red
+    //     *(fbp + location + 3) = color.opacity;      // No transparency
+    // }
     if (vinfo.bits_per_pixel == 32) {
         if  ( 
             ( *(fbp + location) == 0) &&        // Some blue
@@ -185,6 +190,7 @@ void delete_polygon(int n_of_point, Point p[], struct fb_var_screeninfo vinfo, s
     color.red = 0;
     color.green = 0;
     color.blue = 0;
+    color.opacity = 0;
     for(int i=1;i<n_of_point;i++){
         draw_lines(p[i], p[i-1], vinfo, finfo, fbp, color);
     }
@@ -287,35 +293,35 @@ int main(void)
     color_window.red = 255;
     color_window.blue = 55;
     color_window.green = 0;
-    color_window.opacity = 10;
+    color_window.opacity = 0;
 
     red = color_window;
 
     // Right View
-    local[0].x = 742 * WIDTH / 1920;
-    local[0].y = 107 * HEIGHT / 1080;
+    local[0].x = 742 * WIDTH / 1300;
+    local[0].y = 107 * HEIGHT / 755;
 
-    local[1].x = 1115 * WIDTH / 1920;
-    local[1].y = 107 * HEIGHT / 1080;
+    local[1].x = 1115 * WIDTH / 1300;
+    local[1].y = 107 * HEIGHT / 755;
 
-    local[3].x = 742 * WIDTH / 1920;
-    local[3].y = 643 * HEIGHT / 1080;
+    local[3].x = 742 * WIDTH / 1300;
+    local[3].y = 643 * HEIGHT / 755;
 
-    local[2].x = 1115 * WIDTH / 1920;
-    local[2].y = 643 * HEIGHT / 1080;
+    local[2].x = 1115 * WIDTH / 1300;
+    local[2].y = 643 * HEIGHT / 755;
 
     // Left View
-    global[0].x = 185 * WIDTH / 1920;
-    global[0].y = 107 * HEIGHT / 1080;
+    global[0].x = 185 * WIDTH / 1300;
+    global[0].y = 107 * HEIGHT / 755;
 
-    global[1].x = 557 * WIDTH / 1920;
-    global[1].y = 107 * HEIGHT / 1080;
+    global[1].x = 557 * WIDTH / 1300;
+    global[1].y = 107 * HEIGHT / 755;
 
-    global[3].x = 185 * WIDTH / 1920;
-    global[3].y = 643 * HEIGHT / 1080;
+    global[3].x = 185 * WIDTH / 1300;
+    global[3].y = 643 * HEIGHT / 755;
 
-    global[2].x = 557 * WIDTH / 1920;
-    global[2].y = 643 * HEIGHT / 1080;
+    global[2].x = 557 * WIDTH / 1300;
+    global[2].y = 643 * HEIGHT / 755;
 
     double scale = 0.25;
 
@@ -333,23 +339,26 @@ int main(void)
 
 
 
-    struct Point building[50][20];
+    struct Point building[63][20];
 
     int n_of_object;
     int count = 0;
-    int n_of_point, idx, idy;
+    int n_of_point[63], idx, idy;
+    int points;
     ifstream file("building.txt");
 
     if (file.is_open()){
         int index_counter=0;
         file >> n_of_object;
-        while (count < n_of_object && file >> n_of_point){
-          
-          for(int i=0;i<n_of_point;i++){
+        int decX= 0, decY = 0;
+        while (count < n_of_object && file >> points){
+          n_of_point[count] = points;
+          for(int i=0;i<points;i++){
+
             file >> idx;
             file >> idy;
-            building[index_counter][i].x = idx * WIDTH / 1920 + global[0].x;
-            building[index_counter][i].y = idy * HEIGHT / 1080 + global[0].y;
+            building[index_counter][i].x = (idx - 180) * WIDTH / 1300 + global[0].x;
+            building[index_counter][i].y = (idy -  110)* HEIGHT / 755 + global[0].y;
           }
           
           count++;
@@ -365,9 +374,14 @@ int main(void)
     int key;
     int rectangle_side = 4;
 
+    for(int i=0;i<n_of_object;i++){
+        create_polygon(n_of_point[i],building[i],color, vinfo, finfo, fbp);
+    }
+
     while(1){
         for(int i=0;i<n_of_object;i++){
-            create_polygon(n_of_point,building[i],color, vinfo, finfo, fbp);
+            create_polygon(n_of_point[i],building[i],white, vinfo, finfo, fbp);
+            // draw_color(building[i][0].x+3, building[i][0].y+3, vinfo, finfo, fbp, red);
         }
 
         create_polygon(rectangle_side, local,white, vinfo, finfo, fbp);
@@ -408,15 +422,30 @@ int main(void)
             int x_finish = window[2].x;
             int y_finish = window[2].y;
 
-            for(int i=y_start+1;i<y_finish;i++){
-                for(int j=x_start+1;j<x_finish;j++){
-                    // if(check_pixel(i,j,vinfo,finfo,fbp,white)){
-                        fill_pixel(j+557   , i  ,vinfo,finfo,fbp,white);
-                        // create_polygon(n_of_point,building[n_of_object-1],color, vinfo, finfo, fbp);
-                    // }
-                }
-            }
+           
+
+
+            // for(int i=y_start+1;i<y_finish;i++){
+            //     for(int j=x_start+1;j<x_finish;j++){
+            //         long int location = (j+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+            //         (i+vinfo.yoffset) * finfo.line_length;
+            //         if  ( 
+            //             ( *(fbp + location) == white.blue) &&        // Some blue
+            //             ( *(fbp + location + 1) == white.green ) &&     // A little green
+            //             ( *(fbp + location + 2) == white.red ) &&   // A lot of red
+            //             ( *(fbp + location + 3) == white.opacity )
+            //             ) {
+            //                 fill_pixel(j+557   , opacityi  ,vinfo,finfo,fbp,white);
+            //     // create_polygon(n_of_point,building[n_of_object-1],color, vinfo, finfo, fbp);
+            //         } 
+            //         // else {
+            //         //     fill_pixel(j+557   , i  ,vinfo,finfo,fbp,white);
+            //         // }
+            //     }
+            // }
         }
+        // draw_color(window[0].x+1, window[0].y+1, vinfo, finfo, fbp, red);
+
         
     }
 
