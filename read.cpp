@@ -27,7 +27,7 @@ int main () {
           point[i].y = y;
           printf("%d %d\n",point[i].x, point[i].y);
         }
-        // create_building(size,point);
+        // create_polygon(size,point);
         count++;
       } 
       file.close();

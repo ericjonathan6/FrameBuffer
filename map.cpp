@@ -145,7 +145,18 @@ void drawLines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, s
     }
 }
 
-void create_building(int n_of_point, Point p[], Color color, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
+void create_polygon(int n_of_point, Point p[], Color color, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
+    for(int i=1;i<n_of_point;i++){
+        drawLines(p[i], p[i-1], vinfo, finfo, fbp, color);
+    }
+    drawLines(p[n_of_point-1], p[0], vinfo, finfo, fbp, color);
+}
+
+void delete_polygon(int n_of_point, Point p[], struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
+    Color color;
+    color.red = 0;
+    color.green = 0;
+    color.blue = 0;
     for(int i=1;i<n_of_point;i++){
         drawLines(p[i], p[i-1], vinfo, finfo, fbp, color);
     }
@@ -234,72 +245,57 @@ int main(void)
 
     struct Color color,color_window;
 
-    struct Point A,B,C,D,a,b,c,d;
-    struct Point A1,B1,C1,D1;
-    a.x = 187;
-    a.y = 109;
+    struct Point global[5], local[5], window[5];
+    window[0].x = 187;
+    window[0].y = 109;
 
-    b.x = 287;
-    b.y = 109;
+    window[1].x = 287;
+    window[1].y = 109;
 
-    c.x = 287;
-    c.y = 209;
+    window[2].x = 287;
+    window[2].y = 209;
 
-    d.x = 187;
-    d.y = 209;
+    window[3].x = 187;
+    window[3].y = 209;
 
     color_window.red = 255;
     color_window.blue = 55;
     color_window.green = 0;
     color_window.opacity = 10;
 
-    drawLines(a, b, vinfo, finfo, fbp, color_window);
-    drawLines(b, c, vinfo, finfo, fbp, color_window);
-    drawLines(c, d, vinfo, finfo, fbp, color_window);
-    drawLines(d, a, vinfo, finfo, fbp, color_window);
-
     color.red = 255;
     color.blue = 255;
     color.green = 255;
     color.opacity = 0;
 
+    // Right View
+    local[0].x = 742;
+    local[0].y = 107;
 
-    A.x = 742;
-    A.y = 107;
+    local[1].x = 1115;
+    local[1].y = 107;
 
-    B.x = 1115;
-    B.y = 107;
+    local[3].x = 742;
+    local[3].y = 643;
 
-    C.x = 742;
-    C.y = 643;
+    local[2].x = 1115;
+    local[2].y = 643;
 
-    D.x = 1115;
-    D.y = 643;
+    // Left View
+    global[0].x = 185;
+    global[0].y = 107;
 
-    drawLines(A, B, vinfo, finfo, fbp, color);
-    drawLines(B, D, vinfo, finfo, fbp, color);
-    drawLines(C, D, vinfo, finfo, fbp, color);
-    drawLines(C, A, vinfo, finfo, fbp, color);    
+    global[1].x = 557;
+    global[1].y = 107;
 
-    A1.x = 185;
-    A1.y = 107;
+    global[3].x = 185;
+    global[3].y = 643;
 
-    B1.x = 557;
-    B1.y = 107;
-
-    C1.x = 185;
-    C1.y = 643;
-
-    D1.x = 557;
-    D1.y = 643;
-
-    drawLines(A1, B1, vinfo, finfo, fbp, color);
-    drawLines(B1, D1, vinfo, finfo, fbp, color);
-    drawLines(C1, D1, vinfo, finfo, fbp, color);
-    drawLines(C1, A1, vinfo, finfo, fbp, color);    
+    global[2].x = 557;
+    global[2].y = 643;
 
 
-    struct Point point[50][20];
+    struct Point building[50][20];
 
     int n_of_object;
     int count = 0;
@@ -310,51 +306,59 @@ int main(void)
         int index_counter=0;
         file >> n_of_object;
         while (count < n_of_object && file >> n_of_point){
+          
           for(int i=0;i<n_of_point;i++){
             file >> idx;
             file >> idy;
-            point[index_counter][i].x = idx + A1.x;
-            point[index_counter][i].y = idy + A1.y;
+            building[index_counter][i].x = idx + global[0].x;
+            building[index_counter][i].y = idy + global[0].y;
           }
-          // create_building(n_of_point,point[index_counter],color, vinfo, finfo, fbp);
+          
           count++;
           index_counter++;
+        
         } 
+        
         file.close();
     }
 
     else cout << "Unable to open file"; 
       
     int key;
+    int rectangle_side = 4;
+
     while(1){
         for(int i=0;i<n_of_object;i++){
-            create_building(n_of_point,point[i],color, vinfo, finfo, fbp);
+            create_polygon(n_of_point,building[i],color, vinfo, finfo, fbp);
         }
-        drawLines(A, B, vinfo, finfo, fbp, color);
-        drawLines(B, D, vinfo, finfo, fbp, color);
-        drawLines(C, D, vinfo, finfo, fbp, color);
-        drawLines(C, A, vinfo, finfo, fbp, color);
 
-        drawLines(A1, B1, vinfo, finfo, fbp, color);
-        drawLines(B1, D1, vinfo, finfo, fbp, color);
-        drawLines(C1, D1, vinfo, finfo, fbp, color);
-        drawLines(C1, A1, vinfo, finfo, fbp, color);
+        create_polygon(rectangle_side, local,color, vinfo, finfo, fbp);
+        create_polygon(rectangle_side, global,color, vinfo, finfo, fbp);
+        create_polygon(rectangle_side, window, color_window, vinfo, finfo, fbp);
 
-        drawLines(a, b, vinfo, finfo, fbp, color_window);
-        drawLines(b, c, vinfo, finfo, fbp, color_window);
-        drawLines(c, d, vinfo, finfo, fbp, color_window);
-        drawLines(d, a, vinfo, finfo, fbp, color_window);
         if (kbhit()) {
             int n = getch();
             refresh();
-            if (n == 72) { // Up
-                // shot = 1;
-            } else if (n == 75) { //Left
-                // shot = 2;
-            } else if (n == 77) { //Right
-                // shot = 3;
-            } else if (n == 80) { //Down
-
+            if (n == 119) { // Up --> w
+                for(int i=0;i<rectangle_side;i++){
+                    delete_polygon(rectangle_side, window, vinfo, finfo, fbp);
+                    window[i].y-=10;
+                }
+            } else if (n == 97) { //Left --> a
+                for(int i=0;i<rectangle_side;i++){
+                    delete_polygon(rectangle_side, window, vinfo, finfo, fbp);
+                    window[i].x-=10;
+                }
+            } else if (n == 100) { //Right --> d
+                for(int i=0;i<rectangle_side;i++){
+                    delete_polygon(rectangle_side, window,vinfo, finfo, fbp);
+                    window[i].x+=10;
+                }
+            } else if (n == 115) { //Down --> s
+                for(int i=0;i<rectangle_side;i++){
+                    delete_polygon(rectangle_side, window,vinfo, finfo, fbp);
+                    window[i].y+=10;
+                }
             }
         }
     }
