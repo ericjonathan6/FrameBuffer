@@ -170,15 +170,15 @@ void draw_lines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, 
     }
 }
 
-void create_polygon(int n_of_point, Point p[], Color color, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
+void create_polygon(int n_of_point, struct Point p[], struct Color color, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
     for(int i=1;i<n_of_point;i++){
         draw_lines(p[i], p[i-1], vinfo, finfo, fbp, color);
     }
     draw_lines(p[n_of_point-1], p[0], vinfo, finfo, fbp, color);
 }
 
-void delete_polygon(int n_of_point, Point p[], struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
-    Color color;
+void delete_polygon(int n_of_point,struct Point p[], struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
+    struct Color color;
     color.red = 0;
     color.green = 0;
     color.blue = 0;
@@ -335,16 +335,29 @@ int main(void)
     int n_of_object;
     int count = 0;
     int n_of_point, idx, idy;
-    ifstream file("building.txt");
+    
+    char ch, file_name[25];
+   FILE *fp;
+ 
+ 
+   fp = fopen("building.txt", "r"); 
+    
+    
+    // ifstream file("building.txt");
 
-    if (file.is_open()){
+    // fscanf(fp, "%d", &number);
         int index_counter=0;
-        file >> n_of_object;
-        while (count < n_of_object && file >> n_of_point){
+        // file >> n_of_object;
+        fscanf(fp, "%d", &n_of_object);
+
+        while (count < n_of_object ){
+            fscanf(fp, "%d", &n_of_point);
           
           for(int i=0;i<n_of_point;i++){
-            file >> idx;
-            file >> idy;
+
+            fscanf(fp, "%d", &idx);
+            fscanf(fp, "%d", &idy);
+
             building[index_counter][i].x = idx * WIDTH / 1920 + global[0].x;
             building[index_counter][i].y = idy * HEIGHT / 1080 + global[0].y;
           }
@@ -352,10 +365,11 @@ int main(void)
           count++;
           index_counter++;
         
-        } 
+
         
-        file.close();
-    }
+        
+        }
+        fclose(fp);
 
     // else cout << "Unable to open file"; 
       
@@ -410,8 +424,8 @@ int main(void)
             for(int i=y_start+1;i<y_finish;i++){
                 for(int j=x_start+1;j<x_finish;j++){
                     // if(check_pixel(i,j,vinfo,finfo,fbp,white)){
-                        location = (i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
-                        (j+vinfo.yoffset) * finfo.line_length;
+                        location = (j+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                        (i+vinfo.yoffset) * finfo.line_length;
                         if (vinfo.bits_per_pixel == 32) {
                             if  ( 
                                 ( *(fbp + location) == (char)255) &&        // Some blue
