@@ -18,8 +18,8 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 
-const int WIDTH = 1300;
-const int HEIGHT = 755;
+const int WIDTH = 800;
+const int HEIGHT = 600;
 const int WIDTH_MARGIN = 20;
 
 #define PI 3.14159265
@@ -47,12 +47,7 @@ void draw_color(int x, int y, struct fb_var_screeninfo vinfo, struct fb_fix_scre
     // *fbp = color.blue;
     long int location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
                         (y+vinfo.yoffset) * finfo.line_length;
-    // if (vinfo.bits_per_pixel == 32) {
-    //     *(fbp + location) = color.blue;        // Some blue
-    //     *(fbp + location + 1) = color.green;     // A little green
-    //     *(fbp + location + 2) = color.red;    // A lot of red
-    //     *(fbp + location + 3) = color.opacity;      // No transparency
-    // }
+
     if (vinfo.bits_per_pixel == 32) {
         if  ( 
             ( *(fbp + location) == 0) &&        // Some blue
@@ -175,19 +170,18 @@ void draw_lines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, 
     }
 }
 
-void create_polygon(int n_of_point, Point p[], Color color, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
+void create_polygon(int n_of_point, struct Point p[], struct Color color, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
     for(int i=1;i<n_of_point;i++){
         draw_lines(p[i], p[i-1], vinfo, finfo, fbp, color);
     }
     draw_lines(p[n_of_point-1], p[0], vinfo, finfo, fbp, color);
 }
 
-void delete_polygon(int n_of_point, Point p[], struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
-    Color color;
+void delete_polygon(int n_of_point,struct Point p[], struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
+    struct Color color;
     color.red = 0;
     color.green = 0;
     color.blue = 0;
-    color.opacity = 0;
     for(int i=1;i<n_of_point;i++){
         draw_lines(p[i], p[i-1], vinfo, finfo, fbp, color);
     }
@@ -290,35 +284,35 @@ int main(void)
     color_window.red = 255;
     color_window.blue = 55;
     color_window.green = 0;
-    color_window.opacity = 0;
+    color_window.opacity = 10;
 
     red = color_window;
 
     // Right View
-    local[0].x = 742 * WIDTH / 1300;
-    local[0].y = 107 * HEIGHT / 755;
+    local[0].x = 742 * WIDTH / 1920;
+    local[0].y = 107 * HEIGHT / 1080;
 
-    local[1].x = 1115 * WIDTH / 1300;
-    local[1].y = 107 * HEIGHT / 755;
+    local[1].x = 1115 * WIDTH / 1920;
+    local[1].y = 107 * HEIGHT / 1080;
 
-    local[3].x = 742 * WIDTH / 1300;
-    local[3].y = 643 * HEIGHT / 755;
+    local[3].x = 742 * WIDTH / 1920;
+    local[3].y = 643 * HEIGHT / 1080;
 
-    local[2].x = 1115 * WIDTH / 1300;
-    local[2].y = 643 * HEIGHT / 755;
+    local[2].x = 1115 * WIDTH / 1920;
+    local[2].y = 643 * HEIGHT / 1080;
 
     // Left View
-    global[0].x = 185 * WIDTH / 1300;
-    global[0].y = 107 * HEIGHT / 755;
+    global[0].x = 185 * WIDTH / 1920;
+    global[0].y = 107 * HEIGHT / 1080;
 
-    global[1].x = 557 * WIDTH / 1300;
-    global[1].y = 107 * HEIGHT / 755;
+    global[1].x = 557 * WIDTH / 1920;
+    global[1].y = 107 * HEIGHT / 1080;
 
-    global[3].x = 185 * WIDTH / 1300;
-    global[3].y = 643 * HEIGHT / 755;
+    global[3].x = 185 * WIDTH / 1920;
+    global[3].y = 643 * HEIGHT / 1080;
 
-    global[2].x = 557 * WIDTH / 1300;
-    global[2].y = 643 * HEIGHT / 755;
+    global[2].x = 557 * WIDTH / 1920;
+    global[2].y = 643 * HEIGHT / 1080;
 
     double scale = 0.25;
 
@@ -336,49 +330,55 @@ int main(void)
 
 
 
-    struct Point building[63][20];
+    struct Point building[50][20];
 
     int n_of_object;
     int count = 0;
-    int n_of_point[63], idx, idy;
-    int points;
-    ifstream file("building.txt");
+    int n_of_point, idx, idy;
+    
+    char ch, file_name[25];
+   FILE *fp;
+ 
+ 
+   fp = fopen("building.txt", "r"); 
+    
+    
+    // ifstream file("building.txt");
 
-    if (file.is_open()){
+    // fscanf(fp, "%d", &number);
         int index_counter=0;
-        file >> n_of_object;
-        int decX= 0, decY = 0;
-        while (count < n_of_object && file >> points){
-          n_of_point[count] = points;
-          for(int i=0;i<points;i++){
+        // file >> n_of_object;
+        fscanf(fp, "%d", &n_of_object);
 
-            file >> idx;
-            file >> idy;
-            building[index_counter][i].x = (idx - 180) * WIDTH / 1300 + global[0].x;
-            building[index_counter][i].y = (idy -  110)* HEIGHT / 755 + global[0].y;
+        while (count < n_of_object ){
+            fscanf(fp, "%d", &n_of_point);
+          
+          for(int i=0;i<n_of_point;i++){
+
+            fscanf(fp, "%d", &idx);
+            fscanf(fp, "%d", &idy);
+
+            building[index_counter][i].x = idx * WIDTH / 1920 + global[0].x;
+            building[index_counter][i].y = idy * HEIGHT / 1080 + global[0].y;
           }
           
           count++;
           index_counter++;
         
-        } 
+
         
-        file.close();
-    }
+        
+        }
+        fclose(fp);
 
     // else cout << "Unable to open file"; 
       
     int key;
     int rectangle_side = 4;
 
-    for(int i=0;i<n_of_object;i++){
-        create_polygon(n_of_point[i],building[i],color, vinfo, finfo, fbp);
-    }
-
     while(1){
         for(int i=0;i<n_of_object;i++){
-            create_polygon(n_of_point[i],building[i],white, vinfo, finfo, fbp);
-            // draw_color(building[i][0].x+3, building[i][0].y+3, vinfo, finfo, fbp, red);
+            create_polygon(n_of_point,building[i],color, vinfo, finfo, fbp);
         }
 
         create_polygon(rectangle_side, local,white, vinfo, finfo, fbp);
@@ -424,8 +424,8 @@ int main(void)
             for(int i=y_start+1;i<y_finish;i++){
                 for(int j=x_start+1;j<x_finish;j++){
                     // if(check_pixel(i,j,vinfo,finfo,fbp,white)){
-                        location = (i+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
-                        (j+vinfo.yoffset) * finfo.line_length;
+                        location = (j+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                        (i+vinfo.yoffset) * finfo.line_length;
                         if (vinfo.bits_per_pixel == 32) {
                             if  ( 
                                 ( *(fbp + location) == (char)255) &&        // Some blue
@@ -448,10 +448,7 @@ int main(void)
                 //     break;
                 // }
             }
-
         }
-        // draw_color(window[0].x+1, window[0].y+1, vinfo, finfo, fbp, red);
-
         
     }
 

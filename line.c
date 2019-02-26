@@ -194,7 +194,7 @@ void drawLines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, s
     }
 }
 
-void destroyShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp,  int direction) {
+void destroyShip(int xoffset,int yoffset, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp,  int direction) {
     struct Point A, B, C, D, E, F, G, H, X, Z;
     struct Point f1,f2,f3,f4,f5,f6,f7;
 
@@ -238,24 +238,24 @@ void destroyShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_scre
         f6.x = xoffset + 125 * WIDTH / 1920;
         f7.x = xoffset + 125 * WIDTH / 1920;
     }
-    A.y = 200 * HEIGHT / 1080;
-    B.y = 200 * HEIGHT / 1080;
-    C.y = 165 * HEIGHT / 1080;
-    D.y = 165 * HEIGHT / 1080;
-    E.y = 200 * HEIGHT / 1080;
-    F.y = 200 * HEIGHT / 1080;
-    G.y = 250 * HEIGHT / 1080;
-    H.y = 250 * HEIGHT / 1080;
-    X.y = 220 * HEIGHT / 1080;
-    Z.y = 220 * HEIGHT / 1080;
+    A.y = (200 + yoffset ) * HEIGHT / 1080;
+    B.y = (200 + yoffset ) * HEIGHT / 1080;
+    C.y = (165 + yoffset ) * HEIGHT / 1080;
+    D.y = (165 + yoffset ) * HEIGHT / 1080;
+    E.y = (200 + yoffset ) * HEIGHT / 1080;
+    F.y = (200 + yoffset ) * HEIGHT / 1080;
+    G.y = (250 + yoffset ) * HEIGHT / 1080;
+    H.y = (250 + yoffset ) * HEIGHT / 1080;
+    X.y = (220 + yoffset ) * HEIGHT / 1080;
+    Z.y = (220 + yoffset ) * HEIGHT / 1080;
 
-    f1.y = 200 * HEIGHT / 1080;
-    f2.y = 180 * HEIGHT / 1080;
-    f3.y = 165 * HEIGHT / 1080;
-    f4.y = 150 * HEIGHT / 1080;
-    f5.y = 150 * HEIGHT / 1080;
-    f6.y = 165 * HEIGHT / 1080;
-    f7.y = 180 * HEIGHT / 1080;
+    f1.y = (200 + yoffset ) * HEIGHT / 1080 ;
+    f2.y = (180 + yoffset ) * HEIGHT / 1080 ;
+    f3.y = (165 + yoffset ) * HEIGHT / 1080 ;
+    f4.y = (150 + yoffset ) * HEIGHT / 1080 ;
+    f5.y = (150 + yoffset ) * HEIGHT / 1080 ;
+    f6.y = (165 + yoffset ) * HEIGHT / 1080 ;
+    f7.y = (180 + yoffset ) * HEIGHT / 1080 ;
 
     struct Point awal, akhir;
     awal.x = 960 * WIDTH / 1920;
@@ -287,8 +287,10 @@ void destroyShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_scre
     drawLines(f4, B, vinfo, finfo, fbp, color);
     drawLines(f5, B, vinfo, finfo, fbp, color);
  
-
-    usleep(70000);
+    color.red = 100;
+    color.green = 120;
+    color.blue = 0;
+    usleep(500000);
     clearShip(vinfo, finfo, fbp);
 
     drawLines(A, X, vinfo, finfo, fbp, color);
@@ -305,8 +307,10 @@ void destroyShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_scre
     drawLines(f4, X, vinfo, finfo, fbp, color);
     drawLines(f5, X, vinfo, finfo, fbp, color);
  
-
-    usleep(70000);
+    color.red = 0;
+    color.green = 120;
+    color.blue = 150;
+    usleep(500000);
     clearShip(vinfo, finfo, fbp);
 
     drawLines(A, E, vinfo, finfo, fbp, color);
@@ -323,8 +327,10 @@ void destroyShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_scre
     drawLines(f4, E, vinfo, finfo, fbp, color);
     drawLines(f5, E, vinfo, finfo, fbp, color);
  
-    
-    usleep(70000);
+    color.red = 140;
+    color.green = 30;
+    color.blue = 10;
+    usleep(500000);
 
     clearShip(vinfo, finfo, fbp);
 
@@ -343,7 +349,7 @@ void destroyShip(int xoffset, struct fb_var_screeninfo vinfo, struct fb_fix_scre
     drawLines(f5, Z, vinfo, finfo, fbp, color);
  
 
-    usleep(70000);
+    usleep(500000);
     clearShip(vinfo, finfo, fbp);
 }
 
@@ -1122,13 +1128,15 @@ int main(void)
 
 
         if(
-            offset.y <= yoffset + 40*HEIGHT/1920 && offset.y >= yoffset-40*HEIGHT/1920 &&
-            (xoffset *WIDTH / 1920 <= offset.x && xoffset + 120 * WIDTH / 1920 >= offset.x)
+            offset.y <= yoffset + 20 && offset.y >= yoffset-20 &&
+            // (xoffset *WIDTH / 1920 <= offset.x && xoffset + 120 * WIDTH / 1920 >= offset.x)
+            (xoffset <= offset.x && xoffset + 120 >= offset.x)
+
         ) {
             drawBullet(offset, vinfo, finfo, fbp, 0);
             clearShot(vinfo, finfo, fbp);
             while(1)
-                destroyShip(xoffset, vinfo, finfo, fbp, direction);
+                destroyShip(xoffset,yoffset, vinfo, finfo, fbp, direction);
             sleep(1);
             endwin();
             return 0;
