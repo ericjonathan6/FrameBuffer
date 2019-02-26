@@ -21,8 +21,8 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 #include <bits/stdc++.h>
 using namespace std;
 
-const int WIDTH = 1300;
-const int HEIGHT = 755;
+const int WIDTH = 800;
+const int HEIGHT = 600;
 const int WIDTH_MARGIN = 20;
 
 #define PI 3.14159265
@@ -289,30 +289,30 @@ int main(void)
     red = color_window;
 
     // Right View
-    local[0].x = 742;
-    local[0].y = 107;
+    local[0].x = 742 * WIDTH / 1920;
+    local[0].y = 107 * HEIGHT / 1080;
 
-    local[1].x = 1115;
-    local[1].y = 107;
+    local[1].x = 1115 * WIDTH / 1920;
+    local[1].y = 107 * HEIGHT / 1080;
 
-    local[3].x = 742;
-    local[3].y = 643;
+    local[3].x = 742 * WIDTH / 1920;
+    local[3].y = 643 * HEIGHT / 1080;
 
-    local[2].x = 1115;
-    local[2].y = 643;
+    local[2].x = 1115 * WIDTH / 1920;
+    local[2].y = 643 * HEIGHT / 1080;
 
     // Left View
-    global[0].x = 185;
-    global[0].y = 107;
+    global[0].x = 185 * WIDTH / 1920;
+    global[0].y = 107 * HEIGHT / 1080;
 
-    global[1].x = 557;
-    global[1].y = 107;
+    global[1].x = 557 * WIDTH / 1920;
+    global[1].y = 107 * HEIGHT / 1080;
 
-    global[3].x = 185;
-    global[3].y = 643;
+    global[3].x = 185 * WIDTH / 1920;
+    global[3].y = 643 * HEIGHT / 1080;
 
-    global[2].x = 557;
-    global[2].y = 643;
+    global[2].x = 557 * WIDTH / 1920;
+    global[2].y = 643 * HEIGHT / 1080;
 
     double scale = 0.25;
 
@@ -345,8 +345,8 @@ int main(void)
           for(int i=0;i<n_of_point;i++){
             file >> idx;
             file >> idy;
-            building[index_counter][i].x = idx + global[0].x;
-            building[index_counter][i].y = idy + global[0].y;
+            building[index_counter][i].x = idx * WIDTH / 1920 + global[0].x;
+            building[index_counter][i].y = idy * HEIGHT / 1080 + global[0].y;
           }
           
           count++;
