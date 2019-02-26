@@ -99,6 +99,8 @@ bool check_pixel(int x, int y, struct fb_var_screeninfo vinfo, struct fb_fix_scr
             ) {
                return true;
             }      // No transparency
+        return false;
+        
     }
     return false;
 }
@@ -199,6 +201,7 @@ int main(void)
     char *fbp = 0;
     int x, y;
     long int location = 0;
+    printf("AHAHSDFASDF JANCOKKKKKKKKKK\n");
 
     // Open the file for reading and writing
     fbfd = open("/dev/fb0", O_RDWR);
@@ -363,13 +366,14 @@ int main(void)
     int rectangle_side = 4;
 
     while(1){
-        for(int i=0;i<n_of_object-1;i++){
+        for(int i=0;i<n_of_object;i++){
             create_polygon(n_of_point,building[i],color, vinfo, finfo, fbp);
         }
 
         create_polygon(rectangle_side, local,white, vinfo, finfo, fbp);
         create_polygon(rectangle_side, global,white, vinfo, finfo, fbp);
         create_polygon(rectangle_side, window, red, vinfo, finfo, fbp);
+
 
         if (kbhit()) {
             int n = getch();
@@ -399,20 +403,21 @@ int main(void)
                     window[i].y+=10;
                 }
             }
-        }
-        int x_start = window[0].x;
-        int y_start = window[0].y;
-        int x_finish = window[2].x;
-        int y_finish = window[2].y;
+            int x_start = window[0].x;
+            int y_start = window[0].y;
+            int x_finish = window[2].x;
+            int y_finish = window[2].y;
 
-        for(int i=y_start;i<y_finish;i++){
-            for(int j=x_start;j<x_finish;j++){
-                if(check_pixel(i,j,vinfo,finfo,fbp,white)){
-                    fill_pixel(i-y_start+local[0].x  ,  j-x_start+local[0].y   ,vinfo,finfo,fbp,white);
-                    create_polygon(n_of_point,building[n_of_object-1],color, vinfo, finfo, fbp);
+            for(int i=y_start+1;i<y_finish;i++){
+                for(int j=x_start+1;j<x_finish;j++){
+                    // if(check_pixel(i,j,vinfo,finfo,fbp,white)){
+                        fill_pixel(j+557   , i  ,vinfo,finfo,fbp,white);
+                        // create_polygon(n_of_point,building[n_of_object-1],color, vinfo, finfo, fbp);
+                    // }
                 }
             }
         }
+        
     }
 
     munmap(fbp, screensize);
