@@ -46,16 +46,11 @@ int kbhit(void)
     }
 }
 
-void drawColor(int x, int y, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp, struct Color color) {
+void draw_color(int x, int y, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp, struct Color color) {
     // *fbp = color.blue;
     long int location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
                         (y+vinfo.yoffset) * finfo.line_length;
-    // if (vinfo.bits_per_pixel == 32) {
-    //     *(fbp + location) = color.blue;        // Some blue
-    //     *(fbp + location + 1) = color.green;     // A little green
-    //     *(fbp + location + 2) = color.red;    // A lot of red
-    //     *(fbp + location + 3) = color.opacity;      // No transparency
-    // }
+
     if (vinfo.bits_per_pixel == 32) {
         if  ( 
             ( *(fbp + location) == 0) &&        // Some blue
@@ -69,15 +64,46 @@ void drawColor(int x, int y, struct fb_var_screeninfo vinfo, struct fb_fix_scree
                     *(fbp + location + 2) = color.red;    // A lot of red
                     *(fbp + location + 3) = color.opacity;      // No transparency
                 }
-                drawColor(x+1,y,vinfo,finfo,fbp,color);
-                drawColor(x,y+1,vinfo,finfo,fbp,color);
-                drawColor(x-1,y,vinfo,finfo,fbp,color);
-                drawColor(x,y-1,vinfo,finfo,fbp,color);   
+                draw_color(x+1,y,vinfo,finfo,fbp,color);
+                draw_color(x,y+1,vinfo,finfo,fbp,color);
+                draw_color(x-1,y,vinfo,finfo,fbp,color);
+                draw_color(x,y-1,vinfo,finfo,fbp,color);   
             }      // No transparency
     }
 }
 
-void drawLines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp, struct Color color) { 
+void fill_pixel(int x, int y, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp, struct Color color) {
+    // *fbp = color.blue;
+    long int location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                        (y+vinfo.yoffset) * finfo.line_length;
+
+    if (vinfo.bits_per_pixel == 32) {
+        *(fbp + location) = color.blue;        // Some blue
+        *(fbp + location + 1) = color.green;     // A little green
+        *(fbp + location + 2) = color.red;    // A lot of red
+        *(fbp + location + 3) = color.opacity;      // No transparency
+    }
+}
+
+bool check_pixel(int x, int y, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp, struct Color color) {
+    
+    long int location = (x+vinfo.xoffset) * (vinfo.bits_per_pixel/8) +
+                        (y+vinfo.yoffset) * finfo.line_length;
+
+    if (vinfo.bits_per_pixel == 32) {
+        if  ( 
+            ( *(fbp + location) == color.blue) &&        // Some blue
+            ( *(fbp + location + 1) == color.green ) &&     // A little green
+            ( *(fbp + location + 2) == color.red ) &&   // A lot of red
+            ( *(fbp + location + 3) == color.opacity )
+            ) {
+               return true;
+            }      // No transparency
+    }
+    return false;
+}
+
+void draw_lines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp, struct Color color) { 
     int dx = B.x - A.x;
     int dy = B.y - A.y;
     int x0 = A.x, y0 = A.y;
@@ -147,9 +173,9 @@ void drawLines(struct Point A, struct Point B, struct fb_var_screeninfo vinfo, s
 
 void create_polygon(int n_of_point, Point p[], Color color, struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
     for(int i=1;i<n_of_point;i++){
-        drawLines(p[i], p[i-1], vinfo, finfo, fbp, color);
+        draw_lines(p[i], p[i-1], vinfo, finfo, fbp, color);
     }
-    drawLines(p[n_of_point-1], p[0], vinfo, finfo, fbp, color);
+    draw_lines(p[n_of_point-1], p[0], vinfo, finfo, fbp, color);
 }
 
 void delete_polygon(int n_of_point, Point p[], struct fb_var_screeninfo vinfo, struct fb_fix_screeninfo finfo, char *fbp){
@@ -158,9 +184,9 @@ void delete_polygon(int n_of_point, Point p[], struct fb_var_screeninfo vinfo, s
     color.green = 0;
     color.blue = 0;
     for(int i=1;i<n_of_point;i++){
-        drawLines(p[i], p[i-1], vinfo, finfo, fbp, color);
+        draw_lines(p[i], p[i-1], vinfo, finfo, fbp, color);
     }
-    drawLines(p[n_of_point-1], p[0], vinfo, finfo, fbp, color);
+    draw_lines(p[n_of_point-1], p[0], vinfo, finfo, fbp, color);
 }
 
 
@@ -243,30 +269,24 @@ int main(void)
     int xoffset = WIDTH - 200 * WIDTH / 1920;
     int yoffset = 200 * HEIGHT / 1080;
 
-    struct Color color,color_window;
+    struct Color color,color_window, white, red;
 
     struct Point global[5], local[5], window[5];
-    window[0].x = 187;
-    window[0].y = 109;
+    
+    
+    color.red = 255;
+    color.blue = 255;
+    color.green = 255;
+    color.opacity = 0;
 
-    window[1].x = 287;
-    window[1].y = 109;
-
-    window[2].x = 287;
-    window[2].y = 209;
-
-    window[3].x = 187;
-    window[3].y = 209;
+    white = color;
 
     color_window.red = 255;
     color_window.blue = 55;
     color_window.green = 0;
     color_window.opacity = 10;
 
-    color.red = 255;
-    color.blue = 255;
-    color.green = 255;
-    color.opacity = 0;
+    red = color_window;
 
     // Right View
     local[0].x = 742;
@@ -293,6 +313,21 @@ int main(void)
 
     global[2].x = 557;
     global[2].y = 643;
+
+    double scale = 0.25;
+
+    window[0].x = global[0].x;
+    window[0].y = global[0].y;
+
+    window[1].x = global[0].x + (global[1].x-global[0].x)*scale;
+    window[1].y = global[0].y;
+
+    window[2].x = global[0].x + (global[1].x-global[0].x)*scale;
+    window[2].y = global[0].y + (global[2].y-global[0].y)*scale;
+
+    window[3].x = global[0].x;
+    window[3].y = global[0].y + (global[2].y-global[0].y)*scale;
+
 
 
     struct Point building[50][20];
@@ -328,70 +363,57 @@ int main(void)
     int rectangle_side = 4;
 
     while(1){
-        for(int i=0;i<n_of_object;i++){
+        for(int i=0;i<n_of_object-1;i++){
             create_polygon(n_of_point,building[i],color, vinfo, finfo, fbp);
         }
 
-        create_polygon(rectangle_side, local,color, vinfo, finfo, fbp);
-        create_polygon(rectangle_side, global,color, vinfo, finfo, fbp);
-        create_polygon(rectangle_side, window, color_window, vinfo, finfo, fbp);
+        create_polygon(rectangle_side, local,white, vinfo, finfo, fbp);
+        create_polygon(rectangle_side, global,white, vinfo, finfo, fbp);
+        create_polygon(rectangle_side, window, red, vinfo, finfo, fbp);
 
         if (kbhit()) {
             int n = getch();
             refresh();
             if (n == 119) { // Up --> w
-                for(int i=0;i<rectangle_side;i++){
-                    delete_polygon(rectangle_side, window, vinfo, finfo, fbp);
-                    window[i].y-=10;
-                }
+                if(window[0].y > global[0].y)
+                    for(int i=0;i<rectangle_side;i++){
+                        delete_polygon(rectangle_side, window, vinfo, finfo, fbp);
+                        window[i].y-=10;
+                    }
             } else if (n == 97) { //Left --> a
-                for(int i=0;i<rectangle_side;i++){
-                    delete_polygon(rectangle_side, window, vinfo, finfo, fbp);
-                    window[i].x-=10;
-                }
+                if(window[0].x > global[0].x)
+                    for(int i=0;i<rectangle_side;i++){
+                        delete_polygon(rectangle_side, window, vinfo, finfo, fbp);
+                        window[i].x-=10;
+                    }
             } else if (n == 100) { //Right --> d
-                for(int i=0;i<rectangle_side;i++){
-                    delete_polygon(rectangle_side, window,vinfo, finfo, fbp);
-                    window[i].x+=10;
-                }
+                if(window[2].x <= global[2].x)
+                    for(int i=0;i<rectangle_side;i++){
+                        delete_polygon(rectangle_side, window,vinfo, finfo, fbp);
+                        window[i].x+=10;
+                    }
             } else if (n == 115) { //Down --> s
+                if(window[2].y + 10 <= global[2].y)
                 for(int i=0;i<rectangle_side;i++){
                     delete_polygon(rectangle_side, window,vinfo, finfo, fbp);
                     window[i].y+=10;
                 }
             }
         }
+        int x_start = window[0].x;
+        int y_start = window[0].y;
+        int x_finish = window[2].x;
+        int y_finish = window[2].y;
+
+        for(int i=y_start;i<y_finish;i++){
+            for(int j=x_start;j<x_finish;j++){
+                if(check_pixel(i,j,vinfo,finfo,fbp,white)){
+                    fill_pixel(i-y_start+local[0].x  ,  j-x_start+local[0].y   ,vinfo,finfo,fbp,white);
+                    create_polygon(n_of_point,building[n_of_object-1],color, vinfo, finfo, fbp);
+                }
+            }
+        }
     }
-    // while( (key=getch()) != 27 ){
-    //         int n = getch();
-    //         refresh();
-    //         if (n == 72) { //up
-    //             a.y-=25;
-    //             b.y-=25;
-    //             c.y-=25;
-    //             d.y-=25;
-    //         } else if (n == 75) { //left
-    //             a.x-=25;
-    //             b.x-=25;
-    //             c.x-=25;
-    //             d.x-=25;
-    //         } else if (n == 77) { //right
-    //             a.x+=25;
-    //             b.x+=25;
-    //             c.x+=25;
-    //             d.x+=25;
-    //         } else if (n == 80) { //down
-    //             a.y+=5;
-    //             b.y+=5;
-    //             c.y+=5;
-    //             d.y+=5;
-    //         }
-    //     drawLines(a, b, vinfo, finfo, fbp, color_window);
-    //     drawLines(b, c, vinfo, finfo, fbp, color_window);
-    //     drawLines(c, d, vinfo, finfo, fbp, color_window);
-    //     drawLines(d, a, vinfo, finfo, fbp, color_window);
- 
-    // }
 
     munmap(fbp, screensize);
     close(fbfd);
