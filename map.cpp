@@ -378,7 +378,8 @@ int main(void)
     while(1){
         for(int i=0;i<n_of_object;i++){
             create_polygon(n_of_point[i],building[i],white, vinfo, finfo, fbp);
-            // draw_color(building[i][0].x+3, building[i][0].y+3, vinfo, finfo, fbp, red);
+            if(i<3)
+                draw_color(building[i][0].x+3, building[i][0].y+3, vinfo, finfo, fbp, red);
         }
 
         create_polygon(rectangle_side, local,white, vinfo, finfo, fbp);

@@ -18,8 +18,8 @@ http://cep.xor.aps.anl.gov/software/qt4-x11-4.2.2/qtopiacore-testingframebuffer.
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
+const int WIDTH = 1300;
+const int HEIGHT = 755;
 const int WIDTH_MARGIN = 20;
 
 #define PI 3.14159265
@@ -236,8 +236,8 @@ int main(void)
     int direction = 1;
 
     struct Point offset;
-    offset.x = 960 * WIDTH / 1920;
-    offset.y = 885 * HEIGHT / 1080;
+    offset.x = 960 * WIDTH / 1300;
+    offset.y = 885 * HEIGHT / 755;
     int degree1 = 0;
     int degree2 = 90;
 
@@ -266,8 +266,8 @@ int main(void)
     nodelay(stdscr, TRUE);
     scrollok(stdscr, TRUE);
    
-    int xoffset = WIDTH - 200 * WIDTH / 1920;
-    int yoffset = 200 * HEIGHT / 1080;
+    int xoffset = WIDTH - 200 * WIDTH / 1300;
+    int yoffset = 200 * HEIGHT / 755;
 
     struct Color color,color_window, white, red;
 
@@ -289,32 +289,32 @@ int main(void)
     red = color_window;
 
     // Right View
-    local[0].x = 742 * WIDTH / 1920;
-    local[0].y = 107 * HEIGHT / 1080;
+    local[0].x = 742 * WIDTH / 1300;
+    local[0].y = 107 * HEIGHT / 755;
 
-    local[1].x = 1115 * WIDTH / 1920;
-    local[1].y = 107 * HEIGHT / 1080;
+    local[1].x = 1115 * WIDTH / 1300;
+    local[1].y = 107 * HEIGHT / 755;
 
-    local[3].x = 742 * WIDTH / 1920;
-    local[3].y = 643 * HEIGHT / 1080;
+    local[3].x = 742 * WIDTH / 1300;
+    local[3].y = 643 * HEIGHT / 755;
 
-    local[2].x = 1115 * WIDTH / 1920;
-    local[2].y = 643 * HEIGHT / 1080;
+    local[2].x = 1115 * WIDTH / 1300;
+    local[2].y = 643 * HEIGHT / 755;
 
     // Left View
-    global[0].x = 185 * WIDTH / 1920;
-    global[0].y = 107 * HEIGHT / 1080;
+    global[0].x = 185 * WIDTH / 1300;
+    global[0].y = 107 * HEIGHT / 755;
 
-    global[1].x = 557 * WIDTH / 1920;
-    global[1].y = 107 * HEIGHT / 1080;
+    global[1].x = 557 * WIDTH / 1300;
+    global[1].y = 107 * HEIGHT / 755;
 
-    global[3].x = 185 * WIDTH / 1920;
-    global[3].y = 643 * HEIGHT / 1080;
+    global[3].x = 185 * WIDTH / 1300;
+    global[3].y = 643 * HEIGHT / 755;
 
-    global[2].x = 557 * WIDTH / 1920;
-    global[2].y = 643 * HEIGHT / 1080;
+    global[2].x = 557 * WIDTH / 1300;
+    global[2].y = 643 * HEIGHT / 755;
 
-    double scale = 0.25;
+    double scale = 1;
 
     window[0].x = global[0].x;
     window[0].y = global[0].y;
@@ -330,7 +330,7 @@ int main(void)
 
 
 
-    struct Point building[50][20];
+    struct Point building[70][20];
 
     int n_of_object;
     int count = 0;
@@ -346,6 +346,10 @@ int main(void)
     // ifstream file("building.txt");
 
     // fscanf(fp, "%d", &number);
+   bool is_show[100];
+   for(int i=0;i<100;i++){
+    is_show[i] = true;
+   }
         int index_counter=0;
         // file >> n_of_object;
         fscanf(fp, "%d", &n_of_object);
@@ -358,8 +362,8 @@ int main(void)
             fscanf(fp, "%d", &idx);
             fscanf(fp, "%d", &idy);
 
-            building[index_counter][i].x = idx * WIDTH / 1920 + global[0].x;
-            building[index_counter][i].y = idy * HEIGHT / 1080 + global[0].y;
+            building[index_counter][i].x = idx * WIDTH / 1300 ;
+            building[index_counter][i].y = idy * HEIGHT / 755 ;
           }
           
           count++;
@@ -375,10 +379,19 @@ int main(void)
       
     int key;
     int rectangle_side = 4;
+    struct Color zero;
+    zero.red = 0;
+    zero.green = 0;
+    zero.blue = 0;
+    zero.opacity = 0;
+    int zoom = 1;
 
     while(1){
         for(int i=0;i<n_of_object;i++){
-            create_polygon(n_of_point,building[i],color, vinfo, finfo, fbp);
+            if(is_show[i])
+                create_polygon(n_of_point,building[i],color, vinfo, finfo, fbp);
+            
+                draw_color(building[i][0].x+1   , building[i][0].y+1  ,vinfo,finfo,fbp,red);
         }
 
         create_polygon(rectangle_side, local,white, vinfo, finfo, fbp);
@@ -387,6 +400,11 @@ int main(void)
 
 
         if (kbhit()) {
+            for(int i=local[0].y+1 ; i<local[2].y; i++){
+                for(int j=local[0].x+1; j<local[2].x;j++){
+                    fill_pixel(j , i  ,vinfo,finfo,fbp,zero);
+                }
+            }
             int n = getch();
             refresh();
             if (n == 119) { // Up --> w
@@ -413,6 +431,68 @@ int main(void)
                     delete_polygon(rectangle_side, window,vinfo, finfo, fbp);
                     window[i].y+=10;
                 }
+            } else if (n == 98) { // --> b big
+                zoom*=2;
+                scale/=2;
+                window[0].x = global[0].x;
+                window[0].y = global[0].y;
+
+                window[1].x = global[0].x + (global[1].x-global[0].x)*scale;
+                window[1].y = global[0].y;
+
+                window[2].x = global[0].x + (global[1].x-global[0].x)*scale;
+                window[2].y = global[0].y + (global[2].y-global[0].y)*scale;
+
+                window[3].x = global[0].x;
+                window[3].y = global[0].y + (global[2].y-global[0].y)*scale;
+                for(int i=global[0].y+1 ; i<global[2].y; i++){
+                    for(int j=global[0].x+1; j<global[2].x;j++){
+                        fill_pixel(j , i  ,vinfo,finfo,fbp,zero);
+                    }
+                }
+                create_polygon(rectangle_side, window, red, vinfo, finfo, fbp);  
+            } else if (n == 99) { // --> c cilik
+                zoom/=2;
+                scale*=2;
+                window[0].x = global[0].x;
+                window[0].y = global[0].y;
+
+                window[1].x = global[0].x + (global[1].x-global[0].x)*scale;
+                window[1].y = global[0].y;
+
+                window[2].x = global[0].x + (global[1].x-global[0].x)*scale;
+                window[2].y = global[0].y + (global[2].y-global[0].y)*scale;
+
+                window[3].x = global[0].x;
+                window[3].y = global[0].y + (global[2].y-global[0].y)*scale;
+                for(int i=global[0].y+1 ; i<global[2].y; i++){
+                    for(int j=global[0].x+1; j<global[2].x;j++){
+                        fill_pixel(j , i  ,vinfo,finfo,fbp,zero);
+                    }
+                }
+                create_polygon(rectangle_side, window, red, vinfo, finfo, fbp); 
+            } else {
+                for(int i=global[0].y+1 ; i<global[2].y; i++){
+                    for(int j=global[0].x+1; j<global[2].x;j++){
+                        fill_pixel(j , i  ,vinfo,finfo,fbp,zero);
+                    }
+                }
+                if (n == 'j') { // rumah doang
+                    is_show[0] = false;
+                } else if (n == 'k') { // jalan doang
+                    for(int i=1;i<n_of_object;i++){
+                        is_show[i] = false;
+                    }
+                    is_show[0] = true;
+                } else if (n == 'l') { // dua duanya
+                    for(int i=0;i<n_of_object;i++){
+                        is_show[i] = true;
+                    }
+                } else if (n == '0') {
+                    for(int i=0;i<n_of_object;i++){
+                        is_show[i] = false;
+                    }
+                }
             }
             int x_start = window[0].x;
             int y_start = window[0].y;
@@ -433,11 +513,18 @@ int main(void)
                                 ( *(fbp + location + 2) == (char)255 ) &&   // A lot of red
                                 ( *(fbp + location + 3) == (char)0 )
                                 ) {
-                                    // cout<<"yeyeye";
-                                    // not_found = true;
-                                    // break;
-                                    fill_pixel(j+557   , i  ,vinfo,finfo,fbp,white);
-                                } else {
+                                    //Fill zoom
+                                    int scale_y = (i - y_start)*zoom;
+                                    int scale_x = (j - x_start)*zoom;
+                                    for(int yy = 0;yy<zoom;yy++){
+                                        for(int xx = 0;xx<zoom;xx++){
+
+                                            fill_pixel((scale_x)+ local[0].x + xx   , scale_y + yy+local[0].y  ,vinfo,finfo,fbp,white);
+                            
+                                        }
+                                    }
+                                            // fill_pixel((j)+ 557   , i  ,vinfo,finfo,fbp,white);
+
                                 } 
                         }
 
